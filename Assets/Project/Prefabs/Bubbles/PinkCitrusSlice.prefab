@@ -107,6 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Project.Scripts.Bubbles.BubbleController
   _bubbleType: 4
+  _rb: {fileID: 7585970344665373301}
   _animator: {fileID: 1809527686593749256}
 --- !u!95 &1809527686593749256
 Animator:

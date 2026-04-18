@@ -1,3 +1,4 @@
+using BubbleField;
 using Bubbles;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace BubbleGun
         [SerializeField] private float _shotSpeed;
         [SerializeField] private BubbleSpawner _spawner;
         [SerializeField] private EBubbleType _currentType;
+        [SerializeField] private BubbleFieldGrid _fieldGrid;
         // [SerializeField] private BubbleController _bubblePrefab;
 
         private void Update()
@@ -60,6 +62,7 @@ namespace BubbleGun
 
             spawned.transform.up = _shootPoint.up;
             spawned.Shoot(_shootPoint.up, _shotSpeed);
+            _fieldGrid?.RegisterFlyingBubble(spawned);
         }
     }
 }

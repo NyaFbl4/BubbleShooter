@@ -1,16 +1,16 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 using System;
+using BubbleField;
 
 namespace Bubbles
 {
     public class BubbleController : MonoBehaviour, IBubbleController
     {
         [SerializeField] private EBubbleType _bubbleType;
-        // [SerializeField] private Rigidbody2D _rb;
         [SerializeField] private Animator _animator;
-        [SerializeField] private LayerMask _wallMask;
-        // private float _shotSpeed;
+        // [SerializeField] private LayerMask _wallMask;
+        [SerializeField] private Rigidbody2D _rb;
         [SerializeField] private float _defaultSpeed = 10f;
 
         private Camera _mainCamera;
@@ -21,11 +21,23 @@ namespace Bubbles
 
         public event Action<BubbleController, Collider2D> StoppedOnTrigger;
         public EBubbleType BubbleType => _bubbleType;
+        public int Row { get; private set; } = -1;
+        public int Col { get; private set; } = -1;
 
         private void Awake()
         {
             _mainCamera = Camera.main;
-            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();           
+            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();      
+
+            if (_rb == null)
+                _rb = GetComponent<Rigidbody2D>();
+            if (_rb == null)
+                _rb = gameObject.AddComponent<Rigidbody2D>();
+
+            _rb.bodyType = RigidbodyType2D.Kinematic;
+            _rb.simulated = true;
+            _rb.gravityScale = 0f;
+            _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;     
         }
 
         [Button]
@@ -41,10 +53,15 @@ namespace Bubbles
             _isFlying = true;
         }
 
-        // private void OnCollisionEnter2D(Collision2D collision)
         public void StopFlying()
         {
             _isFlying = false;
+        }
+
+        public void SetGridCoords(int row, int col)
+        {
+            Row = row;
+            Col = col;
         }
 
         private void FixedUpdate()
@@ -62,13 +79,13 @@ namespace Bubbles
             {
                 pos.x = leftEdge + halfWidth;
                 transform.position = pos;
-                _shootDir.x = Mathf.Abs(_shootDir.x); // отскок от левой стены
+                _shootDir.x = Mathf.Abs(_shootDir.x);
             }
             else if (pos.x + halfWidth >= rightEdge)
             {
                 pos.x = rightEdge - halfWidth;
                 transform.position = pos;
-                _shootDir.x = -Mathf.Abs(_shootDir.x); // отскок от правой стены
+                _shootDir.x = -Mathf.Abs(_shootDir.x);
             }
         }
 
@@ -77,8 +94,7 @@ namespace Bubbles
             if (!_isFlying)
                 return;
 
-            // как в ките: останавливаемся при касании другого шара/верхней границы
-            if (other.GetComponent<BubbleController>() != null || other.CompareTag("Top"))
+            if (other.GetComponent<BubbleController>() != null || other.GetComponent<TopBound>() != null)
             {
                 _isFlying = false;
                 StoppedOnTrigger?.Invoke(this, other);

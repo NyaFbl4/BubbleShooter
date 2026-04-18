@@ -18,6 +18,7 @@ namespace Bubbles
         private Vector2 _shootDir;
         private float _speed;
         private bool _isFlying;
+        private bool _collidingWithBubbleThisFlight;
 
         public event Action<BubbleController, Collider2D> StoppedOnTrigger;
         public EBubbleType BubbleType => _bubbleType;
@@ -50,6 +51,7 @@ namespace Bubbles
         {
             _shootDir = dir.normalized;
             _speed = speed > 0f ? speed : _defaultSpeed;
+            _collidingWithBubbleThisFlight = false;
             _isFlying = true;
         }
 
@@ -94,7 +96,19 @@ namespace Bubbles
             if (!_isFlying)
                 return;
 
-            if (other.GetComponent<BubbleController>() != null || other.GetComponent<TopBound>() != null)
+            var touchedBubble = other.GetComponent<BubbleController>() != null;
+            var touchedTop = other.GetComponent<TopBound>() != null;
+
+            if (touchedBubble)
+            {
+                _collidingWithBubbleThisFlight = true;
+                _isFlying = false;
+                StoppedOnTrigger?.Invoke(this, other);
+                return;
+            }
+
+            // как в ките: потолок обрабатываем только если не было коллизии с другим шаром
+            if (touchedTop && !_collidingWithBubbleThisFlight)
             {
                 _isFlying = false;
                 StoppedOnTrigger?.Invoke(this, other);

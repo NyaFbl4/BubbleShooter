@@ -29,13 +29,18 @@ namespace BubbleField
         [SerializeField] private bool _buildOnStart = true;
         [SerializeField] private Transform _origin;
         [SerializeField] private Transform _bubblesRoot;
-        [SerializeField] private int _rows = 12;
-        [SerializeField] private int _columns = 10; // как в ките: odd row = columns - 1
+        [SerializeField] private int _maxRows = 12;
         [SerializeField] private float _stepX = 0.5f;
         [SerializeField] private float _stepY = 0.44f;
+        [SerializeField] private float _cellPadding = 0.01f;
+
+        private int _rows;
+        private int _columns;
+        private readonly List<int> _rowWidths = new();
 
         private readonly Dictionary<Cell, BubbleController> _cells = new();
         private readonly Dictionary<BubbleController, Cell> _reverse = new();
+        private readonly List<EBubbleType> _randomMap = new();
 
         private const int MinMatchCount = 3;
 
@@ -56,8 +61,10 @@ namespace BubbleField
 
             ClearField();
 
-            _rows = Mathf.Clamp(_levelData.Rows, 1, 12);
-            _columns = Mathf.Max(2, _levelData.Columns);
+            SyncDimensionsFromLevelData();
+            if (_rows == 0)
+                return;
+             PrepareRandomMap();
 
             for(int r = 0; r < _rows; r++)
             {
@@ -67,7 +74,8 @@ namespace BubbleField
                     if (!TryGetTile(r, c, out BubbleLevelTile tile) || !tile.HasBubble)
                         continue;
                     
-                    BubbleController bubble = _spawner.Spawn(tile.Type, CellToWorld(new Cell(r,c)));
+                    EBubbleType typeToSpawn = ResolveTileType(tile);
+                    BubbleController bubble = _spawner.Spawn(typeToSpawn, CellToWorld(new Cell(r,c)));
                     if (bubble == null)
                         continue;
 
@@ -87,6 +95,82 @@ namespace BubbleField
             _reverse.Clear();
         }
 
+        [Button]
+        private void RandomizeAllTilesAsRandomSlots()
+        {
+            if (_levelData == null || _levelData.AvailableRandomTypes == null || _levelData.AvailableRandomTypes.Count == 0)
+                return;
+
+            int maxSlot = _levelData.AvailableRandomTypes.Count;
+            for (int r = 0; r < _levelData.Grid.Count; r++)
+            {
+                var row = _levelData.Grid[r];
+                if (row == null) continue;
+                for (int c = 0; c < row.Tiles.Count; c++)
+                {
+                    var t = row.Tiles[c];
+                    t.HasBubble = true;
+                    t.IsRandomBubble = true;
+                    t.RandomSlot = UnityEngine.Random.Range(0, maxSlot);
+                    row.Tiles[c] = t;
+                }
+            }
+        }
+
+        private void SyncDimensionsFromLevelData()
+        {
+            _rowWidths.Clear();
+            _rows = 0;
+            _columns = 0;
+
+            if (_levelData == null || _levelData.Grid == null)
+                return;
+
+            _rows = Mathf.Min(_levelData.Grid.Count, _maxRows);
+
+            for (int r = 0; r < _rows; r++)
+            {
+                int width = _levelData.Grid[r]?.Tiles?.Count ?? 0;
+                _rowWidths.Add(width);
+                if (width > _columns)
+                    _columns = width;
+            }
+        }
+
+        private void PrepareRandomMap()
+        {
+            _randomMap.Clear();
+
+            if (_levelData.AvailableRandomTypes == null || _levelData.AvailableRandomTypes.Count == 0)
+            {
+                // fallback: все enum-типы
+                foreach (EBubbleType t in Enum.GetValues(typeof(EBubbleType)))
+                    _randomMap.Add(t);
+            }
+            else
+            {
+                _randomMap.AddRange(_levelData.AvailableRandomTypes);
+            }
+
+            for (int i = 0; i < _randomMap.Count; i++)
+            {
+                int j = UnityEngine.Random.Range(i, _randomMap.Count);
+                (_randomMap[i], _randomMap[j]) = (_randomMap[j], _randomMap[i]);
+            }
+        }
+
+        private EBubbleType ResolveTileType(BubbleLevelTile tile)
+        {
+            if (!tile.IsRandomBubble)
+                return tile.Type;
+
+            if (_randomMap.Count == 0)
+                return tile.Type;
+
+            int idx = Mathf.Abs(tile.RandomSlot) % _randomMap.Count;
+            return _randomMap[idx];
+        }
+
         public void RegisterFlyingBubble(BubbleController bubble)
         {
             if (bubble == null) return;
@@ -96,6 +180,9 @@ namespace BubbleField
 
         private void OnFlyingBubbleStopped(BubbleController flying, Collider2D other)
         {
+            if (flying == null || other == null)
+                return;
+
             flying.StoppedOnTrigger -= OnFlyingBubbleStopped;
 
             Cell target;
@@ -106,6 +193,7 @@ namespace BubbleField
             {
                 if (!TryGetNearestFreeCellOnTopRow(flying.transform.position, out target))
                     return;
+
                 Attach(flying, target);
                 attachedCell = target;
                 attached = true;
@@ -113,23 +201,16 @@ namespace BubbleField
             else
             {
                 var touched = other.GetComponent<BubbleController>();
-                if (touched != null && _reverse.TryGetValue(touched, out var touchedCell))
-                {
-                    if (!TryPickClosestFreeCell(GetEmptyNeighbours(touchedCell), flying.transform.position, out target))
-                    {
-                        if (!TryGetNearestFreeCellGlobal(flying.transform.position, out target))
-                            return;
-                    }
-                    Attach(flying, target);
-                    attachedCell = target;
-                    attached = true;
-                }
-                else if (TryGetNearestFreeCellGlobal(flying.transform.position, out target))
-                {
-                    Attach(flying, target);
-                    attachedCell = target;
-                    attached = true;
-                }    
+                if (touched == null || !_reverse.TryGetValue(touched, out var touchedCell))
+                    return;
+
+                var candidates = GetEmptyNeighbours(touchedCell);
+                if (!TryPickClosestFreeCell(candidates, flying.transform.position, out target))
+                    return;
+
+                Attach(flying, target);
+                attachedCell = target;
+                attached = true;
             }
 
             if (attached)
@@ -200,6 +281,7 @@ namespace BubbleField
             for (int c = 0; c < width; ++c)
             {
                 var cell = new Cell(0, c);
+                if (!IsValidCell(cell)) continue;
                 if (_cells.ContainsKey(cell)) continue;
                 float sqr = (CellToWorld(cell) - worldPos).sqrMagnitude;
                 if (sqr < bestSqr) { bestSqr = sqr; best = cell; found = true; }
@@ -207,44 +289,8 @@ namespace BubbleField
             return found;
         }
 
-        private bool TryGetNearestEmptyNeighbour(Cell center, Vector3 worldPos, out Cell best)
-        {
-            best = default;
-            var found = false;
-            var bestSqr = float.MaxValue;
-
-            foreach (var n in GetNeighbours(center))
-            {
-                if (!IsValidCell(n) || _cells.ContainsKey(n)) continue;
-                float sqr = (CellToWorld(n) - worldPos).sqrMagnitude;
-                if (sqr < bestSqr) { bestSqr = sqr; best = n; found = true; }
-            }
-            return found;
-        }
-
-        private bool TryGetNearestFreeCellGlobal(Vector3 worldPos, out Cell best)
-        {
-            best = default;
-            var found = false;
-            var bestSqr = float.MaxValue;
-
-            for (int r = 0; r < _rows; ++r)
-            {
-                int width = RowWidth(r);
-                for (int c = 0; c < width; ++c)
-                {
-                    var cell = new Cell(r, c);
-                    if (_cells.ContainsKey(cell)) continue;
-                    float sqr = (CellToWorld(cell) - worldPos).sqrMagnitude;
-                    if (sqr < bestSqr) { bestSqr = sqr; best = cell; found = true; }
-                }
-            }
-            return found;
-        }
-
         private IEnumerable<Cell> GetNeighbours(Cell cell)
         {
-            // как в BubbleShooterKit LevelUtils.GetNeighbours
             if (cell.Row % 2 == 0)
             {
                 yield return new Cell(cell.Row - 1, cell.Col - 1);
@@ -265,13 +311,21 @@ namespace BubbleField
             }
         }
 
-        private int RowWidth(int row) => (row % 2 == 0) ? _columns : _columns - 1;
+        private int RowWidth(int row)
+        {
+            if (row < 0 || row >= _rowWidths.Count)
+                return 0;
+            return _rowWidths[row];
+        }
 
         private bool IsValidCell(Cell cell)
         {
-            if (cell.Row < 0 || cell.Row >= _rows) return false;
+            if (cell.Row < 0 || cell.Row >= _rows) 
+                return false;
             int width = RowWidth(cell.Row);
-            return cell.Col >= 0 && cell.Col < width;
+            if (cell.Col < 0 || cell.Col >= width) 
+                return false;
+            return true;
         }
 
         public Vector3 CellToWorld(Cell cell)

@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26bfbd51c9cde844e99392f85fb17322, type: 3}
+  m_Name: RowPreset_04_Left8_Random
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleField.BubbleLevelRow
+  Tiles:
+  - HasBubble: 1
+    IsRandomBubble: 1
+    RandomSlot: 0
+    Type: 0
+  - HasBubble: 1
+    IsRandomBubble: 1
+    RandomSlot: 1
+    Type: 0
+  - HasBubble: 1
+    IsRandomBubble: 1
+    RandomSlot: 2
+    Type: 0
+  - HasBubble: 1
+    IsRandomBubble: 1
+    RandomSlot: 3
+    Type: 0
+  - HasBubble: 1
+    IsRandomBubble: 1
+    RandomSlot: 4
+    Type: 0
+  - HasBubble: 1
+    IsRandomBubble: 1
+    RandomSlot: 5
+    Type: 0
+  - HasBubble: 1
+    IsRandomBubble: 1
+    RandomSlot: 6
+    Type: 0
+  - HasBubble: 1
+    IsRandomBubble: 1
+    RandomSlot: 7
+    Type: 0
+  - HasBubble: 0
+    IsRandomBubble: 0
+    RandomSlot: 0
+    Type: 0
+  - HasBubble: 0
+    IsRandomBubble: 0
+    RandomSlot: 0
+    Type: 0

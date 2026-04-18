@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da91913111411dc4bb277157cd1a4d12, type: 3}
+  m_Name: BubbleLevel1
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleField.BubbleLevelData
+  Grid:
+  - {fileID: 11400000, guid: 1a63782a71854375804536f1e1342060, type: 2}
+  - {fileID: 11400000, guid: ff85a60e40d24484be3d85d5077e148e, type: 2}
+  - {fileID: 11400000, guid: bc01dbd0fe7b47a39f81070696a47ef3, type: 2}
+  - {fileID: 11400000, guid: afeccc644c5e402abe1c25aca604fe4a, type: 2}
+  AvailableRandomTypes: 000000000100000002000000

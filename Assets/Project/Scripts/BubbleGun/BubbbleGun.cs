@@ -14,8 +14,9 @@ namespace BubbleGun
         [SerializeField] private float _minAngle = 20f;   // ограничение вниз-влево/вправо
         [SerializeField] private float _maxAngle = 160f;
         [SerializeField] private float _shotSpeed;
-
-        [SerializeField] private BubbleController _bubblePrefab;
+        [SerializeField] private BubbleSpawner _spawner;
+        [SerializeField] private EBubbleType _currentType;
+        // [SerializeField] private BubbleController _bubblePrefab;
 
         private void Update()
         {
@@ -50,24 +51,15 @@ namespace BubbleGun
         [Button]
         private void TryShoot()
         {
-            if (_bubblePrefab == null || _shootPoint == null)
+            if (_spawner == null || _shootPoint == null)
                 return;
 
-            BubbleController spawned = Instantiate(
-                _bubblePrefab,
-                _shootPoint.position,
-                _shootPoint.rotation
-            );
-
-            spawned.transform.up = _shootPoint.up; // или right, если у тебя ось ствола по X
-
-            Rigidbody2D rb = spawned.GetComponent<Rigidbody2D>();
-            if (rb == null)
+            BubbleController spawned = _spawner.Spawn(_currentType, _shootPoint.position);
+            if (spawned == null)
                 return;
 
-            rb.bodyType = RigidbodyType2D.Dynamic;
-            rb.simulated = true;
-            rb.linearVelocity = (Vector2)_shootPoint.up * _shotSpeed;
+            spawned.transform.up = _shootPoint.up;
+            spawned.Shoot(_shootPoint.up, _shotSpeed);
         }
     }
 }

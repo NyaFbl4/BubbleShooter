@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bd7ee382da296f438666cdc9263f11e, type: 3}
+  m_Name: PinkCitrusSlice
+  m_EditorClassIdentifier: Assembly-CSharp::Bubbles.BubbleDefinition
+  _type: 4
+  _prefab: {fileID: 8982725787356956028, guid: 27e0d8f470c440c8a834f78a2cdd92a9, type: 3}
+  _sprite: {fileID: 3620510468529025383, guid: ae984e930b1e39f448239ebd08d2688d, type: 3}
+  _isSpecial: 0
+  _score: 10

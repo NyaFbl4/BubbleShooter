@@ -128,7 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 96203434}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,6 +275,7 @@ Transform:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 96203434}
+  - {fileID: 1162155168}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
@@ -551,7 +552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d661d9e2b7b0496381ded629c2a28cb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Project.Scripts.Bubbles.BubbleSpawner
-  _bubblePool: {fileID: 11400000, guid: fbd6ed17fbf071c49ac3906b34349ab1, type: 2}
+  _bubbleCatalog: {fileID: 11400000, guid: 69682b81844a4087aad0e5672b053265, type: 2}
   _spawnParent: {fileID: 1810119138}
 --- !u!1 &619394800
 GameObject:
@@ -662,15 +663,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162155167}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.03889, y: -4.1896, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 199038559}
   - {fileID: 539001754}
   - {fileID: 2087384981}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 228563160}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1162155169
 MonoBehaviour:
@@ -690,7 +691,8 @@ MonoBehaviour:
   _minAngle: 20
   _maxAngle: 160
   _shotSpeed: 10
-  _bubblePrefab: {fileID: 8982725787356956028, guid: 6d26bfe05fb44702834e14129b3dd72a, type: 3}
+  _spawner: {fileID: 540127717}
+  _currentType: 0
 --- !u!1 &1294763855
 GameObject:
   m_ObjectHideFlags: 0
@@ -882,7 +884,7 @@ GameObject:
   - component: {fileID: 1705931709}
   - component: {fileID: 1705931710}
   - component: {fileID: 1705931711}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -1101,7 +1103,7 @@ GameObject:
   - component: {fileID: 2053041459}
   - component: {fileID: 2053041460}
   - component: {fileID: 2053041461}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall (1)
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -1311,4 +1313,3 @@ SceneRoots:
   m_Roots:
   - {fileID: 1907765824}
   - {fileID: 228563160}
-  - {fileID: 1162155168}

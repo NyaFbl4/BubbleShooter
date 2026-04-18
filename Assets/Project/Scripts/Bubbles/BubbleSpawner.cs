@@ -6,47 +6,62 @@ namespace Bubbles
 {
     public class BubbleSpawner : MonoBehaviour
     {
-        [SerializeField] private BubblePool _bubblePool;
+        [SerializeField] private BubbleCatalog _bubbleCatalog;
         [SerializeField] private Transform _spawnParent;
 
-        private readonly Dictionary<EBubbleType, BubbleController> _prefabsByType =
-            new Dictionary<EBubbleType, BubbleController>();
+        private readonly Dictionary<EBubbleType, BubbleController> _prefabsByType = new();
 
         private void Awake()
         {
             RebuildLookup();
         }
 
-        [Button] // скоррее всего не нужена фукнция
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (!Application.isPlaying)
+                RebuildLookup();
+        }
+#endif
+
+        [Button]
         public void RebuildLookup()
         {
             _prefabsByType.Clear();
 
-            if (_bubblePool == null)
-                return;
-
-            foreach (BubbleController bubblePrefab in _bubblePool.PoolBubbles)
+            if (_bubbleCatalog == null)
             {
-                if (bubblePrefab == null)
+                Debug.LogError("BubbleCatalog is not assigned.", this);
+                return;
+            }
+
+            _bubbleCatalog.Rebuild();
+
+            foreach (BubbleDefinition definition in _bubbleCatalog.Definitions)
+            {
+                if (definition == null)
                     continue;
 
-                EBubbleType bubbleType = bubblePrefab.BubbleType;
-                if (_prefabsByType.ContainsKey(bubbleType))
+                if (definition.Prefab == null)
                 {
-                    Debug.LogError($"Duplicate bubble prefab for type {bubbleType} on {name}", this);
+                    Debug.LogError($"Prefab is missing for type {definition.Type}", this);
                     continue;
                 }
 
-                _prefabsByType.Add(bubbleType, bubblePrefab);
+                if (_prefabsByType.ContainsKey(definition.Type))
+                {
+                    Debug.LogError($"Duplicate prefab for type {definition.Type}", this);
+                    continue;
+                }
+
+                _prefabsByType.Add(definition.Type, definition.Prefab);
             }
         }
 
         public BubbleController Spawn(EBubbleType bubbleType, Vector3 worldPosition)
         {
             if (_prefabsByType.Count == 0)
-            {
                 RebuildLookup();
-            }
 
             if (!_prefabsByType.TryGetValue(bubbleType, out BubbleController bubblePrefab))
             {

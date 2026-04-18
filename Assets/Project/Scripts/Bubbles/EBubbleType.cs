@@ -1,4 +1,4 @@
-namespace Assets.Project.Scripts.Bubbles
+namespace Bubbles
 {
     public enum EBubbleType
     {

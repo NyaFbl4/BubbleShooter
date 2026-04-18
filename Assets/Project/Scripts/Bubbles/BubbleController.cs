@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Assets.Project.Scripts.Bubbles
+namespace Bubbles
 {
     public class BubbleController : MonoBehaviour
     {

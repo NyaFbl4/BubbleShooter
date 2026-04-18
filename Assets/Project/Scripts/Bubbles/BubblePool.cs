@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Assets.Project.Scripts.Bubbles;
+using Bubbles;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Configs/Bubble pool", fileName = "BubblePool")]

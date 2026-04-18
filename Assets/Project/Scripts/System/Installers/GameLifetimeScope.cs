@@ -10,7 +10,6 @@ namespace Assets.Project.Scripts.System.Installers
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterMessagePipe();
-            builder.RegisterEntryPoint<BubbleBurstLogger>(Lifetime.Singleton);
         }
     }
 }

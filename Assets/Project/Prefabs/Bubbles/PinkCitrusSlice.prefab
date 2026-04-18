@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4225174903070755465}
   - component: {fileID: 7585970344665373301}
   m_Layer: 0
-  m_Name: Bubble
+  m_Name: PinkCitrusSlice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -8038976213705442086, guid: 778be134d0a906c4b8197882134a1497, type: 3}
+  m_Sprite: {fileID: 3620510468529025383, guid: ae984e930b1e39f448239ebd08d2688d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94a4e420113d3f24cadb90cca7242017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Project.Scripts.Bubbles.BubbleController
-  _bubbleType: 0
+  _bubbleType: 4
   _animator: {fileID: 1809527686593749256}
 --- !u!95 &1809527686593749256
 Animator:
@@ -174,14 +174,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1204132564764600789}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

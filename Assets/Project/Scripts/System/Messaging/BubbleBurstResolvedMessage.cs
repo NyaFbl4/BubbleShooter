@@ -1,4 +1,4 @@
-using Assets.Project.Scripts.Bubbles;
+using Bubbles;
 
 namespace Assets.Project.Scripts.System.Messaging
 {

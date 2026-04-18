@@ -1,24 +1,27 @@
 using UnityEngine;
 
-public class Burst : StateMachineBehaviour
+namespace Bubbles
 {
-    private bool _destroyed;
-
-    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public class Burst : StateMachineBehaviour
     {
-        _destroyed = false;
+        private bool _destroyed;
+
+        public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            _destroyed = false;
+        }
+
+        public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            if (_destroyed)
+                return;
+
+            if (stateInfo.normalizedTime < 1f)
+                return;
+
+            _destroyed = true;
+            Object.Destroy(animator.gameObject);
+        }
+
     }
-
-    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        if (_destroyed)
-            return;
-
-        if (stateInfo.normalizedTime < 1f)
-            return;
-
-        _destroyed = true;
-        Object.Destroy(animator.gameObject);
-    }
-
 }

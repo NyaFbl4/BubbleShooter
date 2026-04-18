@@ -14,4 +14,59 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BubbleField.BubbleLevelData
   Rows: 12
   Columns: 10
-  Grid: []
+  Grid:
+  - Tiles:
+    - HasBubble: 1
+      Type: 0
+    - HasBubble: 1
+      Type: 0
+    - HasBubble: 1
+      Type: 0
+    - HasBubble: 1
+      Type: 1
+    - HasBubble: 1
+      Type: 1
+    - HasBubble: 1
+      Type: 1
+    - HasBubble: 1
+      Type: 0
+    - HasBubble: 1
+      Type: 0
+    - HasBubble: 1
+      Type: 0
+  - Tiles:
+    - HasBubble: 1
+      Type: 3
+    - HasBubble: 1
+      Type: 3
+    - HasBubble: 1
+      Type: 3
+    - HasBubble: 1
+      Type: 3
+    - HasBubble: 1
+      Type: 2
+    - HasBubble: 1
+      Type: 2
+    - HasBubble: 1
+      Type: 2
+    - HasBubble: 1
+      Type: 2
+  - Tiles:
+    - HasBubble: 1
+      Type: 4
+    - HasBubble: 1
+      Type: 4
+    - HasBubble: 1
+      Type: 4
+    - HasBubble: 1
+      Type: 0
+    - HasBubble: 1
+      Type: 0
+    - HasBubble: 1
+      Type: 0
+    - HasBubble: 1
+      Type: 5
+    - HasBubble: 1
+      Type: 5
+    - HasBubble: 1
+      Type: 5

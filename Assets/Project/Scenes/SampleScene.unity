@@ -899,9 +899,6 @@ MonoBehaviour:
   _camera: {fileID: 519420031}
   _pivot: {fileID: 539001754}
   _shootPoint: {fileID: 1733848463}
-  _minAngle: 20
-  _maxAngle: 160
-  _shotSpeed: 10
   _spawner: {fileID: 540127717}
   _gameLogic: {fileID: 1512586476}
   _bubbleCatalog: {fileID: 11400000, guid: 69682b81844a4087aad0e5672b053265, type: 2}
@@ -1489,6 +1486,7 @@ MonoBehaviour:
   autoInjectGameObjects: []
   _bubbleGun: {fileID: 1162155169}
   _gameLogic: {fileID: 1512586476}
+  _gunConfig: {fileID: 11400000, guid: e525a83ed4d0c624ca1433db97ee3918, type: 2}
   _levelData: {fileID: 11400000, guid: 3d209845eadd66b48b46bcd1f2a5b9c9, type: 2}
   _bubbleCatalog: {fileID: 11400000, guid: 69682b81844a4087aad0e5672b053265, type: 2}
 --- !u!1 &1705931708

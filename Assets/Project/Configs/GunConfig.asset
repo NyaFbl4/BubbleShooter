@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10b8e1a7ef7a4fdbad2cb2965fd6f933, type: 3}
   m_Name: GunConfig
   m_EditorClassIdentifier: Assembly-CSharp::BubbleGun.GunConfig
-  MinAngle: 0
-  MaxAngle: 0
-  ShotSpeed: 0
+  MinAngle: 20
+  MaxAngle: 160
+  ShotSpeed: 10

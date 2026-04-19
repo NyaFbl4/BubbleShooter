@@ -36,6 +36,8 @@ namespace BubbleField
 
         private int _rows;
         private int _columns;
+        private int _evenRowWidth;
+        private int _oddRowWidth;
         private readonly List<int> _rowWidths = new();
 
         private readonly Dictionary<Cell, BubbleController> _cells = new();
@@ -122,11 +124,22 @@ namespace BubbleField
         public IEnumerable<Cell> GetNeighboursPublic(Cell cell) => GetNeighbours(cell);
         public bool IsTopRow(Cell cell) => cell.Row == 0;
 
+        private int GetLowestOccupiedRow()
+        { 
+            int maxRow = -1;
+            foreach (var kv in _cells)
+                if (kv.Key.Row > maxRow) 
+                    maxRow = kv.Key.Row;
+            return maxRow;
+        }
+        
         private void SyncDimensionsFromLevelData()
         {
             _rowWidths.Clear();
             _rows = 0;
             _columns = 0;
+            _evenRowWidth = 0;
+            _oddRowWidth = 0;
 
             if (_levelData == null || _levelData.Grid == null)
                 return;
@@ -137,8 +150,50 @@ namespace BubbleField
             {
                 int width = _levelData.Grid[r]?.Tiles?.Count ?? 0;
                 _rowWidths.Add(width);
+                if (r % 2 == 0)
+                    _evenRowWidth = Mathf.Max(_evenRowWidth, width);
+                else 
+                    _oddRowWidth = Mathf.Max(_oddRowWidth, width);
                 if (width > _columns)
                     _columns = width;
+            }
+
+            if (_evenRowWidth <= 0)
+                _evenRowWidth = Mathf.Max(1, _columns);
+            if (_oddRowWidth <= 0)
+                _oddRowWidth = _evenRowWidth;
+        }
+
+        private int PredictRowWidth(int row)
+        {
+            if (row >= 0 && row < _rowWidths.Count)
+                return _rowWidths[row];
+
+            return (row % 2 == 0) ? _evenRowWidth : _oddRowWidth;
+        }
+
+        private bool IsValidOrGrowableCell(Cell cell)
+        {
+            if (cell.Row < 0) return false;
+            if (cell.Row < _rows) return IsValidCell(cell);
+                 // Разрешаем "как в рефе": первый новый ряд снизу
+                 if (cell.Row == _rows && _rows < _maxRows) 
+                 {
+                    int width = PredictRowWidth(cell.Row);
+                    return cell.Col >= 0 && cell.Col < width;
+                 } 
+            return false;
+        }
+
+        private void EnsureRowExists(int row)
+        {
+            while (_rows <= row && _rows < _maxRows)
+            {
+                int width = PredictRowWidth(_rows);
+                _rowWidths.Add(width);
+                if (width > _columns)
+                    _columns = width;
+                _rows++;
             }
         }
 
@@ -192,7 +247,7 @@ namespace BubbleField
             var result = new List<Cell>(6);
             foreach(Cell n in GetNeighbours(cell))
             {
-                if (!IsValidCell(n)) continue;
+                if (!IsValidOrGrowableCell(n)) continue;
                 if (_cells.ContainsKey(n)) continue;
                 result.Add(n);
             }
@@ -324,6 +379,7 @@ namespace BubbleField
             if (!TryPickClosestFreeCell(candidates, flying.transform.position, out target))
                 return false;
 
+            EnsureRowExists(target.Row);
             Attach(flying, target);
             attachedCell = target;
             return true;

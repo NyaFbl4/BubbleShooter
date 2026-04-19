@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using BubbleField;
 using Bubbles;
+using GameLogic;
 using Sirenix.OdinInspector;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Random = UnityEngine.Random;
+using VContainer;
 
 namespace BubbleGun
 {
-    public class BubbbleGun : MonoBehaviour
+    public class BubbleGunController  : MonoBehaviour
     {
         [SerializeField] private Camera _camera;
         [SerializeField] private Transform _pivot;
@@ -19,20 +19,25 @@ namespace BubbleGun
         [SerializeField] private float _maxAngle = 160f;
         [SerializeField] private float _shotSpeed;
         [SerializeField] private BubbleSpawner _spawner;
-        [SerializeField] private EBubbleType _currentType;
-        [SerializeField] private EBubbleType _nextType;
         [SerializeField] private BubbleGameLogic _gameLogic;
-        [SerializeField] private BubbleLevelData _levelData;
         [SerializeField] private BubbleCatalog _bubbleCatalog;
         [SerializeField] private SpriteRenderer _currentBubble;
         [SerializeField] private SpriteRenderer _nextBubble;
+        
+        private BubbleQueueService _queue;
+        private BubbleGunService _service;
 
-        private readonly List<EBubbleType> _shotPool = new();
-
+        [Inject]
+        public void Construct(BubbleQueueService queue,  BubbleGunService service)
+        {
+            _queue = queue;
+            _service = service;
+        }
+        
         private void Start()
         {
-            BuildShotPool();
-            PrimeQueue();
+            _service = new BubbleGunService();
+            _queue?.Prime();
             RefreshPreviews();
         }
 
@@ -57,98 +62,34 @@ namespace BubbleGun
             );
             mouseWorld.z = _pivot.position.z;
 
-            Vector2 dir = mouseWorld - _pivot.position;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            angle = Mathf.Clamp(angle, _minAngle, _maxAngle);
-            _pivot.rotation = Quaternion.Euler(0f, 0f, angle - 90f); //добавить огриничение на вращение
-
-            // Если ствол смотрит вверх (+Y), замени на:
-            // _pivot.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
+            if (_service.TryCalculateAim(_pivot.position, mouseWorld, _minAngle, _maxAngle, out float z))
+                _pivot.rotation = Quaternion.Euler(0f, 0f, z);
         }
-
-        [Button]
+        
         private void TryShoot()
         {
-            if (_spawner == null || _shootPoint == null)
+            if (_queue == null)
                 return;
-
-            BubbleController spawned = _spawner.Spawn(_currentType, _shootPoint.position);
+            
+            BubbleController spawned = _service.Shoot(_spawner, _shootPoint, _queue.CurrentType, _shotSpeed, _gameLogic);
             if (spawned == null)
                 return;
 
-            spawned.transform.up = _shootPoint.up;
-            spawned.Shoot(_shootPoint.up, _shotSpeed);
-            _gameLogic?.RegisterFlyingBubble(spawned);
-
-            AdvanceQueue(); // после выстрела: current <- next, next <- random from level config
+            _queue.Advance();
             RefreshPreviews();
         }
 
-        private void BuildShotPool()
-        {
-            _shotPool.Clear();
-
-            if (_levelData != null && _levelData.AvailableRandomTypes != null)
-            {
-                foreach (var type in _levelData.AvailableRandomTypes)
-                {
-                    if (_shotPool.Contains(type))
-                        continue;
-                    if (IsTypeConfigured(type))
-                        _shotPool.Add(type);
-                }
-            }
-
-            if (_shotPool.Count == 0 && _bubbleCatalog != null)
-            {
-                foreach (var def in _bubbleCatalog.Definitions)
-                {
-                    if (def == null || def.Prefab == null)
-                        continue;
-                    if (_shotPool.Contains(def.Type))
-                        continue;
-                    _shotPool.Add(def.Type);
-                }
-            }
-        }
-        
-        private bool IsTypeConfigured(EBubbleType type)
-        {
-            if (_bubbleCatalog == null)
-                return false;
-            return _bubbleCatalog.TryGet(type, out var def)
-                   && def != null
-                   && def.Prefab != null;
-        }
-
-       private void PrimeQueue()
-       {
-           _currentType = RollType();
-           _nextType = RollType();
-       }
-
-       private void AdvanceQueue()
-       {
-           _currentType = _nextType;
-           _nextType = RollType();
-       }
-
-       private EBubbleType RollType()
-       {
-           if (_shotPool.Count == 0)
-               BuildShotPool();
-
-           if (_shotPool.Count == 0)
-               return _currentType; // аварийный fallback
-
-           int idx = Random.Range(0, _shotPool.Count);
-           return _shotPool[idx];
-       }
-
        private void RefreshPreviews()
        {
-           ApplyPreview(_currentBubble, _currentType);
-           ApplyPreview(_nextBubble, _nextType);
+           if (_queue == null)
+           {
+               ApplyPreview(_currentBubble, default);
+               ApplyPreview(_nextBubble, default);
+               return;
+           }
+           
+           ApplyPreview(_currentBubble, _queue.CurrentType);
+           ApplyPreview(_nextBubble, _queue.NextType);
        } 
        
        private void ApplyPreview(SpriteRenderer target, EBubbleType type)

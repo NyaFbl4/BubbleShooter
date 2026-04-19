@@ -117,6 +117,11 @@ namespace BubbleField
             }
         }
 
+        public bool TryGetBubble(Cell cell, out BubbleController bubble) => _cells.TryGetValue(cell, out bubble);
+        public IEnumerable<Cell> GetOccupiedCells() => _cells.Keys;
+        public IEnumerable<Cell> GetNeighboursPublic(Cell cell) => GetNeighbours(cell);
+        public bool IsTopRow(Cell cell) => cell.Row == 0;
+
         private void SyncDimensionsFromLevelData()
         {
             _rowWidths.Clear();
@@ -169,52 +174,6 @@ namespace BubbleField
 
             int idx = Mathf.Abs(tile.RandomSlot) % _randomMap.Count;
             return _randomMap[idx];
-        }
-
-        public void RegisterFlyingBubble(BubbleController bubble)
-        {
-            if (bubble == null) return;
-            bubble.StoppedOnTrigger -= OnFlyingBubbleStopped;
-            bubble.StoppedOnTrigger += OnFlyingBubbleStopped;
-        }
-
-        private void OnFlyingBubbleStopped(BubbleController flying, Collider2D other)
-        {
-            if (flying == null || other == null)
-                return;
-
-            flying.StoppedOnTrigger -= OnFlyingBubbleStopped;
-
-            Cell target;
-            Cell attachedCell = default;
-            bool attached = false;
-
-            if (other.GetComponent<TopBound>() != null)
-            {
-                if (!TryGetNearestFreeCellOnTopRow(flying.transform.position, out target))
-                    return;
-
-                Attach(flying, target);
-                attachedCell = target;
-                attached = true;
-            }
-            else
-            {
-                var touched = other.GetComponent<BubbleController>();
-                if (touched == null || !_reverse.TryGetValue(touched, out var touchedCell))
-                    return;
-
-                var candidates = GetEmptyNeighbours(touchedCell);
-                if (!TryPickClosestFreeCell(candidates, flying.transform.position, out target))
-                    return;
-
-                Attach(flying, target);
-                attachedCell = target;
-                attached = true;
-            }
-
-            if (attached)
-                ResolveBoardAfterAttach(attachedCell);
         }
 
         private void Attach(BubbleController bubble, Cell cell)
@@ -339,105 +298,38 @@ namespace BubbleField
             );
         }
 
-        private void ResolveBoardAfterAttach(Cell origin)
+        public bool TryAttachFlyingBubble(BubbleController flying, Collider2D other, out Cell attachedCell)
         {
-            if (!_cells.TryGetValue(origin, out BubbleController originBubble) || originBubble == null)
-                return;
+            attachedCell = default;
+            if (flying == null || other == null)
+                return false;
 
-            List<Cell> matchCluster = CollectSameTypeCluster(origin, originBubble.BubbleType);
-            if (matchCluster.Count < MinMatchCount)
-                return;
+            Cell target;
 
-            RemoveCells(matchCluster, true);
-            RemoveFloatingIslands();
-        }
-
-        private List<Cell> CollectSameTypeCluster(Cell start, EBubbleType type)
-        {
-            var result = new List<Cell>();
-            var visited = new HashSet<Cell>();
-            var queue = new Queue<Cell>();
-
-            visited.Add(start);
-            queue.Enqueue(start);
-
-            while (queue.Count > 0)
+            if (other.GetComponent<TopBound>() != null)
             {
-                Cell current = queue.Dequeue();
-                result.Add(current);
+                if (!TryGetNearestFreeCellOnTopRow(flying.transform.position, out target))
+                    return false;
 
-                foreach (Cell n in GetNeighbours(current))
-                {
-                    if (!IsValidCell(n) || visited.Contains(n))
-                        continue;
-                    if (!_cells.TryGetValue(n, out BubbleController b) || b == null)
-                        continue;
-                    if (b.BubbleType != type)
-                        continue;
-
-                    visited.Add(n);
-                    queue.Enqueue(n);
-                }
+                Attach(flying, target);
+                attachedCell = target;
+                return true;
             }
 
-            return result;
+            var touched = other.GetComponent<BubbleController>();
+            if (touched == null || !_reverse.TryGetValue(touched, out var touchedCell))
+                return false;
+
+            var candidates = GetEmptyNeighbours(touchedCell);
+            if (!TryPickClosestFreeCell(candidates, flying.transform.position, out target))
+                return false;
+
+            Attach(flying, target);
+            attachedCell = target;
+            return true;
         }
 
-        private void RemoveFloatingIslands()
-        {
-            var visited = new HashSet<Cell>();
-            var floating = new List<Cell>();
-            var starts = new List<Cell>(_cells.Keys); // копия, чтобы безопасно удалять позже
-
-            for (int i = 0; i < starts.Count; i++)
-            {
-                Cell start = starts[i];
-                if (visited.Contains(start) || !_cells.ContainsKey(start))
-                    continue;
-
-                bool touchesTop;
-                List<Cell> island = CollectIsland(start, visited, out touchesTop);
-                if (!touchesTop)
-                    floating.AddRange(island);
-            }
-
-            if (floating.Count > 0)
-                RemoveCells(floating, true);
-        }
-
-        private List<Cell> CollectIsland(Cell start, HashSet<Cell> visited, out bool touchesTop)
-        {
-            var island = new List<Cell>();
-            var queue = new Queue<Cell>();
-
-            touchesTop = false;
-            visited.Add(start);
-            queue.Enqueue(start);
-
-            while (queue.Count > 0)
-            {
-                Cell current = queue.Dequeue();
-                island.Add(current);
-
-                if (current.Row == 0)
-                    touchesTop = true;
-
-                foreach (Cell n in GetNeighbours(current))
-                {
-                    if (!IsValidCell(n) || visited.Contains(n))
-                        continue;
-                    if (!_cells.ContainsKey(n))
-                        continue;
-
-                    visited.Add(n);
-                    queue.Enqueue(n);
-                }
-            }
-
-            return island;
-        }
-
-        private void RemoveCells(List<Cell> cells, bool playBurst)
+        public void RemoveCells(List<Cell> cells, bool playBurst)
         {
             for (int i = 0; i < cells.Count; i++)
             {

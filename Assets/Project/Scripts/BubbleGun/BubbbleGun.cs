@@ -15,21 +15,21 @@ namespace BubbleGun
         [SerializeField] private Camera _camera;
         [SerializeField] private Transform _pivot;
         [SerializeField] private Transform _shootPoint;
-        [SerializeField] private float _minAngle = 20f; // ограничение вниз-влево/вправо
-        [SerializeField] private float _maxAngle = 160f;
-        [SerializeField] private float _shotSpeed;
         [SerializeField] private BubbleSpawner _spawner;
         [SerializeField] private BubbleGameLogic _gameLogic;
         [SerializeField] private BubbleCatalog _bubbleCatalog;
         [SerializeField] private SpriteRenderer _currentBubble;
         [SerializeField] private SpriteRenderer _nextBubble;
-        
+
+        private GunConfig _gunConfig;
         private BubbleQueueService _queue;
         private BubbleGunService _service;
 
         [Inject]
-        public void Construct(BubbleQueueService queue,  BubbleGunService service)
+        public void Construct(GunConfig gunConfig, 
+            BubbleQueueService queue,  BubbleGunService service)
         {
+            _gunConfig = gunConfig;
             _queue = queue;
             _service = service;
         }
@@ -62,7 +62,7 @@ namespace BubbleGun
             );
             mouseWorld.z = _pivot.position.z;
 
-            if (_service.TryCalculateAim(_pivot.position, mouseWorld, _minAngle, _maxAngle, out float z))
+            if (_service.TryCalculateAim(_pivot.position, mouseWorld, _gunConfig.MinAngle, _gunConfig.MaxAngle, out float z))
                 _pivot.rotation = Quaternion.Euler(0f, 0f, z);
         }
         
@@ -71,7 +71,7 @@ namespace BubbleGun
             if (_queue == null)
                 return;
             
-            BubbleController spawned = _service.Shoot(_spawner, _shootPoint, _queue.CurrentType, _shotSpeed, _gameLogic);
+            BubbleController spawned = _service.Shoot(_spawner, _shootPoint, _queue.CurrentType, _gunConfig.ShotSpeed, _gameLogic);
             if (spawned == null)
                 return;
 

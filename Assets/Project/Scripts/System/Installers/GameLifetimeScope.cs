@@ -14,8 +14,9 @@ namespace Installers
     {
         [SerializeField] private BubbleGunController  _bubbleGun;
         [SerializeField] private BubbleGameLogic _gameLogic;
-        
-        [Header("Configs")]
+
+        [Header("Configs")] 
+        [SerializeField] private GunConfig _gunConfig;
         [SerializeField] private BubbleLevelData _levelData;
         [SerializeField] private BubbleCatalog _bubbleCatalog;
         
@@ -36,6 +37,7 @@ namespace Installers
 
         private void RegisterConfigs(IContainerBuilder builder)
         {
+            builder.RegisterInstance(_gunConfig);
             builder.RegisterInstance(_levelData);
             builder.RegisterInstance(_bubbleCatalog);
         }

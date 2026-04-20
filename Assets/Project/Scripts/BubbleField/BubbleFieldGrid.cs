@@ -119,6 +119,37 @@ namespace BubbleField
             }
         }
 
+        public int GetGroundRow()
+        {
+            int ground = -1;
+            foreach (var kv in _cells)
+            {
+                if (kv.Key.Row > ground)
+                    ground = kv.Key.Row;
+            }
+            return ground;
+        }
+
+        public void ShiftOriginRows(int rows)
+        {
+            if (rows == 0) 
+                return;
+            var t = _origin != null ? _origin : transform;
+            t.position += Vector3.up * (rows * _stepY);
+            RepositionAllBubblesToGrid();
+        }
+
+        private void RepositionAllBubblesToGrid()
+        {
+            foreach (var kv in _cells)
+            {
+                var cell = kv.Key;
+                var bubble = kv.Value;
+                if (bubble == null) continue;
+                bubble.transform.position = CellToWorld(cell);
+            }
+        }
+        
         public bool TryGetBubble(Cell cell, out BubbleController bubble) => _cells.TryGetValue(cell, out bubble);
         public IEnumerable<Cell> GetOccupiedCells() => _cells.Keys;
         public IEnumerable<Cell> GetNeighboursPublic(Cell cell) => GetNeighbours(cell);
@@ -141,12 +172,16 @@ namespace BubbleField
             _evenRowWidth = 0;
             _oddRowWidth = 0;
 
-            if (_levelData == null || _levelData.Grid == null)
+            if (_levelData == null)
                 return;
 
-            _rows = Mathf.Min(_levelData.Grid.Count, _maxRows);
+            int configuredRows = _levelData.Rows > 0
+                ? _levelData.Rows 
+                : (_levelData.Grid?.Count ?? 0);
+            _rows = Mathf.Min(configuredRows, _maxRows);
 
-            for (int r = 0; r < _rows; r++)
+            int authoredRows = Mathf.Min(_levelData.Grid?.Count ?? 0, _rows);
+            for (int r = 0; r < authoredRows; r++)
             {
                 int width = _levelData.Grid[r]?.Tiles?.Count ?? 0;
                 _rowWidths.Add(width);
@@ -158,10 +193,26 @@ namespace BubbleField
                     _columns = width;
             }
 
-            if (_evenRowWidth <= 0)
-                _evenRowWidth = Mathf.Max(1, _columns);
-            if (_oddRowWidth <= 0)
-                _oddRowWidth = _evenRowWidth;
+            if (_evenRowWidth <= 0 && _oddRowWidth > 0) _evenRowWidth = _oddRowWidth;
+            if (_oddRowWidth <= 0 && _evenRowWidth > 0) _oddRowWidth = _evenRowWidth;
+            if (_evenRowWidth <= 0) _evenRowWidth = 1;
+            if (_oddRowWidth <= 0) _oddRowWidth = _evenRowWidth;
+
+            for (int i = 0; i < _rows; i++)
+            {
+                int width;
+                if (i < (_levelData.Grid?.Count ?? 0))
+                    width = _levelData.Grid[i]? _evenRowWidth : _oddRowWidth;
+                else
+                    width = (i % 2 == 0) ? _evenRowWidth : _oddRowWidth;
+                
+                if (width <= 0)
+                    width = (i % 2 == 0) ? _evenRowWidth : _oddRowWidth;
+                
+                _rowWidths.Add(width);
+                if (width > _columns)
+                    _columns = width;
+            }
         }
 
         private int PredictRowWidth(int row)

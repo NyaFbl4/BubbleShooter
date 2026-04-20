@@ -14,6 +14,7 @@ namespace Installers
     {
         [SerializeField] private BubbleGunController  _bubbleGun;
         [SerializeField] private BubbleGameLogic _gameLogic;
+        [SerializeField] private BubbleFieldGrid _grid;
 
         [Header("Configs")] 
         [SerializeField] private GunConfig _gunConfig;
@@ -33,6 +34,7 @@ namespace Installers
             builder.Register<BubbleGunService>(Lifetime.Singleton);
             builder.Register<BubbleQueueService>(Lifetime.Singleton);
             builder.Register<IBubbleResolveService, BubbleResolveService>(Lifetime.Singleton);
+            builder.Register<IBubbleFieldScrollService, BubbleFieldScrollService>(Lifetime.Singleton);
         }
 
         private void RegisterConfigs(IContainerBuilder builder)
@@ -46,6 +48,7 @@ namespace Installers
         {
             builder.RegisterComponent(_bubbleGun).AsSelf();
             builder.RegisterComponent(_gameLogic).AsSelf();
+            builder.RegisterComponent(_grid).AsSelf();
         }
     }
 }

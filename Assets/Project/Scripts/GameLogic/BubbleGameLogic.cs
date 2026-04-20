@@ -10,11 +10,20 @@ namespace GameLogic
     {
         [SerializeField] private BubbleFieldGrid _grid;
         [SerializeField] private int _minMatchCount = 3;
+        
         private IBubbleResolveService _resolveService;
+        private IBubbleFieldScrollService _scrollService;
 
-        [Inject] public void Construct(IBubbleResolveService resolveService)
+        [Inject] 
+        public void Construct(IBubbleResolveService resolveService, IBubbleFieldScrollService  scrollService)
         { 
             _resolveService = resolveService;
+            _scrollService = scrollService;
+        }
+
+        private void Start()
+        {
+            _scrollService?.Init();
         }
         
         public void RegisterFlyingBubble(BubbleController bubble)
@@ -32,13 +41,19 @@ namespace GameLogic
             if (!_grid.TryAttachFlyingBubble(flying, other, out var attachedCell))
                 return;
 
-            if (_resolveService == null) 
+            if (_resolveService == null)
+            {
+                _scrollService?.OnShotResolved();
                 return;
+            }
+            
             var resolved = _resolveService.Resolve(_grid, attachedCell, _minMatchCount);
             if (resolved.Matched.Count > 0)
                 _grid.RemoveCells(resolved.Matched, playBurst: true);
             if (resolved.Floating.Count > 0) 
                 _grid.RemoveCells(resolved.Floating, playBurst: true);
+            
+            _scrollService?.OnShotResolved();
         }
     }
 }

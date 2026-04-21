@@ -50,8 +50,9 @@ namespace GameLogic
             var resolved = _resolveService.Resolve(_grid, attachedCell, _minMatchCount);
             if (resolved.Matched.Count > 0)
                 _grid.RemoveCells(resolved.Matched, playBurst: true);
-            if (resolved.Floating.Count > 0) 
-                _grid.RemoveCells(resolved.Floating, playBurst: true);
+            var floating = _resolveService.CollectFloating(_grid);
+            if (floating.Count > 0)    
+                _grid.RemoveCells(floating, playBurst: true);
             
             _scrollService?.OnShotResolved();
         }

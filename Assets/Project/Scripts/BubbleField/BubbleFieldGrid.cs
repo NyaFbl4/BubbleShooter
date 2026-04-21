@@ -179,47 +179,36 @@ namespace BubbleField
                 ? _levelData.Rows 
                 : (_levelData.Grid?.Count ?? 0);
             _rows = Mathf.Min(configuredRows, _maxRows);
-
-            int authoredRows = Mathf.Min(_levelData.Grid?.Count ?? 0, _rows);
-            for (int r = 0; r < authoredRows; r++)
-            {
-                int width = _levelData.Grid[r]?.Tiles?.Count ?? 0;
-                _rowWidths.Add(width);
-                if (r % 2 == 0)
-                    _evenRowWidth = Mathf.Max(_evenRowWidth, width);
-                else 
-                    _oddRowWidth = Mathf.Max(_oddRowWidth, width);
-                if (width > _columns)
-                    _columns = width;
-            }
-
-            if (_evenRowWidth <= 0 && _oddRowWidth > 0) _evenRowWidth = _oddRowWidth;
-            if (_oddRowWidth <= 0 && _evenRowWidth > 0) _oddRowWidth = _evenRowWidth;
-            if (_evenRowWidth <= 0) _evenRowWidth = 1;
-            if (_oddRowWidth <= 0) _oddRowWidth = _evenRowWidth;
-
+            if (_rows <= 0) return;
+            int configuredColumns = _levelData.Columns  > 0
+                ? _levelData.Columns  
+                : ResolveColumnsFromAuthoredGrid();
+            _columns = Mathf.Max(1, configuredColumns);
+            
+            _evenRowWidth = _columns;
+            _oddRowWidth = Mathf.Max(1, _columns - 1);
+            
             for (int i = 0; i < _rows; i++)
+                _rowWidths.Add((i % 2 == 0) ? _evenRowWidth : _oddRowWidth);
+        }
+        
+        private int ResolveColumnsFromAuthoredGrid()
+        {
+            int maxWidth = 0;
+            if (_levelData?.Grid == null)
+                return 1;
+            for (int i = 0; i < _levelData.Grid.Count; i++)
             {
-                int width;
-                if (i < (_levelData.Grid?.Count ?? 0))
-                    width = _levelData.Grid[i]? _evenRowWidth : _oddRowWidth;
-                else
-                    width = (i % 2 == 0) ? _evenRowWidth : _oddRowWidth;
-                
-                if (width <= 0)
-                    width = (i % 2 == 0) ? _evenRowWidth : _oddRowWidth;
-                
-                _rowWidths.Add(width);
-                if (width > _columns)
-                    _columns = width;
+                int w = _levelData.Grid[i]?.Tiles?.Count ?? 0;
+                if (w > maxWidth)
+                     maxWidth = w;
             }
+            return Mathf.Max(1, maxWidth); 
         }
 
         private int PredictRowWidth(int row)
         {
-            if (row >= 0 && row < _rowWidths.Count)
-                return _rowWidths[row];
-
+            if (row < 0) return 0;
             return (row % 2 == 0) ? _evenRowWidth : _oddRowWidth;
         }
 
@@ -378,9 +367,8 @@ namespace BubbleField
 
         private int RowWidth(int row)
         {
-            if (row < 0 || row >= _rowWidths.Count)
-                return 0;
-            return _rowWidths[row];
+            if (row < 0 || row >= _rows) return 0;
+            return (row % 2 == 0) ? _evenRowWidth : _oddRowWidth;
         }
 
         private bool IsValidCell(Cell cell)

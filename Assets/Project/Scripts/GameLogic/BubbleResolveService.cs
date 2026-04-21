@@ -19,10 +19,14 @@ namespace GameLogic
                 return result;
 
             result.Matched.AddRange(same);
-            result.Floating.AddRange(CollectFloatingIslands(grid));
             return result;
         }
 
+        public List<BubbleFieldGrid.Cell> CollectFloating(BubbleFieldGrid grid)
+        {
+            return CollectFloatingIslands(grid);
+        }
+        
         private List<BubbleFieldGrid.Cell> CollectSameTypeCluster(BubbleFieldGrid grid, BubbleFieldGrid.Cell start, EBubbleType type)
         {
             var result = new List<BubbleFieldGrid.Cell>();

@@ -8,6 +8,8 @@ namespace BubbleField
     public class BubbleLevelData: ScriptableObject
     {
         public int Rows;
+        public int Columns;
+        public int NumBubbles;
         public List<BubbleLevelRow> Grid = new();
         public List<EBubbleType> AvailableRandomTypes = new();
     }

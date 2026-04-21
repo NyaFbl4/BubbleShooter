@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bd7ee382da296f438666cdc9263f11e, type: 3}
+  m_Name: OrangeStripedCandy
+  m_EditorClassIdentifier: Assembly-CSharp::Bubbles.BubbleDefinition
+  _type: 14
+  _prefab: {fileID: 8982725787356956028, guid: 2dbc5b7282864475a0ed4d3fae94a189, type: 3}
+  _sprite: {fileID: -2947526863502713391, guid: d9a8a9f4ccbb3364282d9e5d041d028a, type: 3}
+  _isSpecial: 0
+  _score: 10

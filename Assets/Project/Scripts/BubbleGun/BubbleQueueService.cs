@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BubbleField;
 using Bubbles;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace BubbleGun
 {
@@ -9,16 +10,18 @@ namespace BubbleGun
     {
         private readonly BubbleLevelData _levelData;
         private readonly BubbleCatalog _bubbleCatalog;
+        private readonly IBubbleShootPoolService _poolService;
         private readonly List<EBubbleType> _pool = new();
 
+        public event Action QueueChanged;
+        
         public EBubbleType CurrentType { get; private set; }
         public EBubbleType NextType { get; private set; }
         public bool IsPrimed { get; private set; }
         
-        public BubbleQueueService(BubbleLevelData levelData, BubbleCatalog bubbleCatalog)
+        public BubbleQueueService(IBubbleShootPoolService poolService)
         {
-            _levelData = levelData;
-            _bubbleCatalog = bubbleCatalog;
+            _poolService = poolService;
         }
 
         public void Prime()
@@ -27,6 +30,7 @@ namespace BubbleGun
             CurrentType = Roll();
             NextType = Roll();
             IsPrimed = true;
+            QueueChanged?.Invoke();
         }
 
         public void Advance()
@@ -39,34 +43,27 @@ namespace BubbleGun
 
             CurrentType = NextType;
             NextType = Roll();
+            QueueChanged?.Invoke();
         }
 
+        public void SyncAfterBoardChanged()
+        {
+            RebuildPool();
+            if (!IsPrimed)
+            {
+                Prime();
+                return;
+            }
+
+            var changed = false;
+            if (!_pool.Contains(CurrentType)) { CurrentType = Roll(); changed = true; }
+            if (!_pool.Contains(NextType)) { NextType = Roll(); changed = true; }
+            if (changed) QueueChanged?.Invoke();
+        }
+        
         private void RebuildPool()
         {
-            _pool.Clear();
-
-            if (_levelData != null && _levelData.AvailableRandomTypes != null)
-            {
-                foreach (var type in _levelData.AvailableRandomTypes)
-                {
-                    if (_pool.Contains(type))
-                        continue;
-                    if (IsSpawnable(type))
-                        _pool.Add(type);
-                }
-            }
-
-            if (_pool.Count == 0 && _bubbleCatalog != null)
-            {
-                foreach (var def in _bubbleCatalog.Definitions)
-                {
-                    if (def == null || def.Prefab == null)
-                        continue;
-                    if (_pool.Contains(def.Type))
-                        continue;
-                    _pool.Add(def.Type);
-                }
-            }
+            _poolService?.Rebuild(_pool);
         }
 
         private bool IsSpawnable(EBubbleType type)

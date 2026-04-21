@@ -35,6 +35,7 @@ namespace Installers
             builder.Register<BubbleQueueService>(Lifetime.Singleton);
             builder.Register<IBubbleResolveService, BubbleResolveService>(Lifetime.Singleton);
             builder.Register<IBubbleFieldScrollService, BubbleFieldScrollService>(Lifetime.Singleton);
+            builder.Register<IBubbleShootPoolService, BubbleShootPoolService>(Lifetime.Singleton);
         }
 
         private void RegisterConfigs(IContainerBuilder builder)

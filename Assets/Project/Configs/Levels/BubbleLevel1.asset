@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da91913111411dc4bb277157cd1a4d12, type: 3}
   m_Name: BubbleLevel1
   m_EditorClassIdentifier: Assembly-CSharp::BubbleField.BubbleLevelData
+  Rows: 5
+  Columns: 10
+  NumBubbles: 10
   Grid:
   - {fileID: 11400000, guid: 1a63782a71854375804536f1e1342060, type: 2}
   - {fileID: 11400000, guid: ff85a60e40d24484be3d85d5077e148e, type: 2}

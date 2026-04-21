@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using BubbleField;
+using BubbleGun;
 using Bubbles;
 using UnityEngine;
 using VContainer;
@@ -13,12 +14,15 @@ namespace GameLogic
         
         private IBubbleResolveService _resolveService;
         private IBubbleFieldScrollService _scrollService;
+        private BubbleQueueService _queue;
 
         [Inject] 
-        public void Construct(IBubbleResolveService resolveService, IBubbleFieldScrollService  scrollService)
+        public void Construct(IBubbleResolveService resolveService, IBubbleFieldScrollService  scrollService,
+            BubbleQueueService  queue)
         { 
             _resolveService = resolveService;
             _scrollService = scrollService;
+            _queue = queue;
         }
 
         private void Start()
@@ -48,11 +52,19 @@ namespace GameLogic
             }
             
             var resolved = _resolveService.Resolve(_grid, attachedCell, _minMatchCount);
+            var boardChanged = false;
             if (resolved.Matched.Count > 0)
+            {
                 _grid.RemoveCells(resolved.Matched, playBurst: true);
+                boardChanged = true;
+            }
+            
             var floating = _resolveService.CollectFloating(_grid);
-            if (floating.Count > 0)    
+            if (floating.Count > 0)
+            {
                 _grid.RemoveCells(floating, playBurst: true);
+                boardChanged = true;
+            }
             
             _scrollService?.OnShotResolved();
         }

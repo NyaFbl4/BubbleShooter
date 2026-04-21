@@ -36,11 +36,17 @@ namespace BubbleGun
         
         private void Start()
         {
-            _service = new BubbleGunService();
-            _queue?.Prime();
+            if (_queue != null)
+                _queue.QueueChanged += RefreshPreviews;
             RefreshPreviews();
         }
 
+        private void OnDestroy()
+        {
+            if (_queue != null) 
+                _queue.QueueChanged -= RefreshPreviews;
+        }
+        
         private void Update()
         {
             AimToMouse();

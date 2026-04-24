@@ -4,6 +4,7 @@ using BubbleGun;
 using Bubbles;
 using GameLogic;
 using MessagePipe;
+using Project.Scripts.Systems.UI;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -20,12 +21,28 @@ namespace Installers
         [SerializeField] private GunConfig _gunConfig;
         [SerializeField] private BubbleLevelData _levelData;
         [SerializeField] private BubbleCatalog _bubbleCatalog;
+        [SerializeField] private LayoutsRepository _layoutsRepository;
         
         protected override void Configure(IContainerBuilder builder)
         {
             RegisterSystem(builder);
+            RegisterViews(builder);
             RegisterComponentOnScene(builder);
             RegisterConfigs(builder);
+        }
+
+        private void RegisterViews(IContainerBuilder builder)
+        {
+            if (_layoutsRepository == null)
+                return;
+
+            foreach (var view in _layoutsRepository.Views)
+            {
+                if (view ==  null)
+                    continue;
+                
+                builder.RegisterComponentInNewPrefab(view, Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
+            }
         }
         
         private void RegisterSystem(IContainerBuilder builder)
@@ -36,6 +53,11 @@ namespace Installers
             builder.Register<IBubbleResolveService, BubbleResolveService>(Lifetime.Singleton);
             builder.Register<IBubbleFieldScrollService, BubbleFieldScrollService>(Lifetime.Singleton);
             builder.Register<IBubbleShootPoolService, BubbleShootPoolService>(Lifetime.Singleton);
+        }
+
+        private void RegisterPresenters(IContainerBuilder builder)
+        {
+            
         }
 
         private void RegisterConfigs(IContainerBuilder builder)

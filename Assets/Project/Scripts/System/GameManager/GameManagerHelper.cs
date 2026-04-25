@@ -40,5 +40,29 @@ namespace Project.Scripts.GameManager
 
             _gameManagerService.FinishGame();
         }
+        
+        [Button]
+        public void PauseGame()
+        {
+            if (_gameManagerService == null)
+            {
+                Debug.LogError("GameManagerService is null. Ensure GameManager is registered in GameLifetimeScope.");
+                return;
+            }
+
+            _gameManagerService.PauseGame();
+        }
+        
+        [Button]
+        public void ResumeGame()
+        {
+            if (_gameManagerService == null)
+            {
+                Debug.LogError("GameManagerService is null. Ensure GameManager is registered in GameLifetimeScope.");
+                return;
+            }
+
+            _gameManagerService.ResumeGame();
+        }
     }
 }

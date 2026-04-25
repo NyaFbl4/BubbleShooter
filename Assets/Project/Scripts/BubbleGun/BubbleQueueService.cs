@@ -46,6 +46,16 @@ namespace BubbleGun
             QueueChanged?.Invoke();
         }
 
+        public bool TrySwapCurrentNext()
+        {
+            if (!IsPrimed)
+                return false;
+            
+            (CurrentType, NextType) = (NextType, CurrentType);
+            QueueChanged?.Invoke();
+            return true;
+        }
+
         public void SyncAfterBoardChanged()
         {
             RebuildPool();

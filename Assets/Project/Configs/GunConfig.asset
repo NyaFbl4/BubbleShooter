@@ -15,3 +15,6 @@ MonoBehaviour:
   MinAngle: 20
   MaxAngle: 160
   ShotSpeed: 10
+  AllowSwap: 1
+  AllowRightClickSwap: 1
+  SwapKey: 31

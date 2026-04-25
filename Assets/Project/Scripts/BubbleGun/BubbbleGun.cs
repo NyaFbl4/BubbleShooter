@@ -23,11 +23,6 @@ namespace BubbleGun
         private BubbleCatalog _bubbleCatalog;
         private BubbleQueueService _queue;
         private BubbleGunService _service;
-
-        private void Awake()
-        {
-            IGameStartListener.Register(this);
-        }
         
         [Inject]
         public void Construct(GunConfig gunConfig, BubbleCatalog bubbleCatalog,
@@ -37,14 +32,18 @@ namespace BubbleGun
             _queue = queue;
             _service = service;
             _bubbleCatalog = bubbleCatalog;
+            
+            IGameListener.Register(this);
         }
         
         public void OnStartGame()
         {
             _queue?.Prime();
             if (_queue != null)
+            {
                 _queue.QueueChanged += RefreshPreviews;
-            
+            }
+
             RefreshPreviews();
         }
 
@@ -60,6 +59,9 @@ namespace BubbleGun
         {
             AimToMouse();
 
+            if(TryHandleSwapInput())
+                return;
+            
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
                 TryShoot();
@@ -70,6 +72,36 @@ namespace BubbleGun
         {
             if (_queue != null)
                 _queue.QueueChanged -= RefreshPreviews;
+        }
+
+        private bool TryHandleSwapInput()
+        {
+            if (_queue == null || !_gunConfig.AllowSwap)
+                return false;
+            
+            bool keySwap = Keyboard.current != null && Keyboard.current[_gunConfig.SwapKey].wasPressedThisFrame;
+            bool rightClickSwap = _gunConfig.AllowRightClickSwap &&
+                                  Mouse.current != null &&
+                                  Mouse.current.rightButton.wasPressedThisFrame;
+            bool clickOnNextPreview = Mouse.current != null &&
+                                      Mouse.current.leftButton.wasPressedThisFrame &&
+                                           IsPointerOverNextPreview();
+            if (!keySwap && !rightClickSwap && !clickOnNextPreview)
+                return false;
+            return _queue.TrySwapCurrentNext();
+        }
+
+        private bool IsPointerOverNextPreview()
+        {
+            if (_camera == null || _nextBubble == null || !_nextBubble.enabled || _nextBubble.sprite == null)
+                return false;
+            if (Mouse.current != null)
+                return false;
+
+            var mouse = Mouse.current.position.ReadValue();
+            var world = _camera.ScreenToWorldPoint(new Vector3(mouse.x, mouse.y, Mathf.Abs(_camera.transform.position.z)));
+            world.z = _nextBubble.bounds.center.z;
+            return _nextBubble.bounds.Contains(world);
         }
 
         private void AimToMouse()

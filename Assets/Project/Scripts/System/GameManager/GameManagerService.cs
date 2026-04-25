@@ -24,7 +24,7 @@ namespace Project.Scripts.GameManager
 
         public void Start()
         {
-            _gameState = EGameState.Play;
+            //_gameState = EGameState.Play;
         }
 
         public void Dispose()
@@ -66,7 +66,7 @@ namespace Project.Scripts.GameManager
         private void AddListener(IGameListener gameListener)
         {
             _gameListeners.Add(gameListener);
-
+            Debug.Log("register listener");
             if (gameListener is IGameUpdateListener gameUpdateListener)
                 _gameUpdateListeners.Add(gameUpdateListener);
 

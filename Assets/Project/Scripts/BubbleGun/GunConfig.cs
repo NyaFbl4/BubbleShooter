@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BubbleGun
 {
@@ -8,5 +9,10 @@ namespace BubbleGun
         public float MinAngle;
         public float MaxAngle;
         public float ShotSpeed;
+
+        [Header("Swap")] 
+        public bool AllowSwap;
+        public bool AllowRightClickSwap;
+        public Key SwapKey = Key.Q;
     }
 }

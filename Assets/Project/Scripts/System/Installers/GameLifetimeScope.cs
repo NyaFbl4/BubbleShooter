@@ -50,7 +50,7 @@ namespace Installers
         private void RegisterSystem(IContainerBuilder builder)
         {
             builder.RegisterMessagePipe();
-            builder.Register<GameManagerService>(Lifetime.Singleton);
+            builder.Register<GameManagerService>(Lifetime.Singleton).As<IGameManagerService>();
             builder.Register<BubbleGunService>(Lifetime.Singleton);
             builder.Register<BubbleQueueService>(Lifetime.Singleton);
             builder.Register<IBubbleResolveService, BubbleResolveService>(Lifetime.Singleton);

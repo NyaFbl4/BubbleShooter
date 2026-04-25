@@ -4,6 +4,7 @@ using BubbleGun;
 using Bubbles;
 using GameLogic;
 using MessagePipe;
+using Project.Scripts.GameManager;
 using Project.Scripts.Systems.UI;
 using UnityEngine;
 using VContainer;
@@ -16,6 +17,7 @@ namespace Installers
         [SerializeField] private BubbleGunController  _bubbleGun;
         [SerializeField] private BubbleGameLogic _gameLogic;
         [SerializeField] private BubbleFieldGrid _grid;
+        [SerializeField] private GameManagerHelper _gameManagerHelper;
 
         [Header("Configs")] 
         [SerializeField] private GunConfig _gunConfig;
@@ -48,6 +50,7 @@ namespace Installers
         private void RegisterSystem(IContainerBuilder builder)
         {
             builder.RegisterMessagePipe();
+            builder.Register<GameManagerService>(Lifetime.Singleton).As<IGameManagerService>();
             builder.Register<BubbleGunService>(Lifetime.Singleton);
             builder.Register<BubbleQueueService>(Lifetime.Singleton);
             builder.Register<IBubbleResolveService, BubbleResolveService>(Lifetime.Singleton);
@@ -69,6 +72,7 @@ namespace Installers
         
         private void RegisterComponentOnScene(IContainerBuilder builder)
         {
+            builder.RegisterComponent(_gameManagerHelper).AsSelf();
             builder.RegisterComponent(_bubbleGun).AsSelf();
             builder.RegisterComponent(_gameLogic).AsSelf();
             builder.RegisterComponent(_grid).AsSelf();

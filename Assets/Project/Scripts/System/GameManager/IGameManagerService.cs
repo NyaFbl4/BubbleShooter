@@ -4,5 +4,7 @@ namespace Project.Scripts.GameManager
     {
         void StartGame();
         void FinishGame();
+        void PauseGame();
+        void ResumeGame();
     }
 }

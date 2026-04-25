@@ -6,6 +6,7 @@ namespace Project.Scripts.GameManager
     public enum EGameState
     {
         Play,
+        Pause,
         Finish,
         Off
     }

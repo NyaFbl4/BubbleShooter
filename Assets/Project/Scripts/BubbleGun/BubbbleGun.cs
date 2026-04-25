@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
 using BubbleField;
 using Bubbles;
 using GameLogic;
+using Project.Scripts.GameManager;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,44 +9,54 @@ using VContainer;
 
 namespace BubbleGun
 {
-    public class BubbleGunController  : MonoBehaviour
+    public class BubbleGunController : MonoBehaviour, IGameStartListener, IGameUpdateListener, IGameFinishListener
     {
         [SerializeField] private Camera _camera;
         [SerializeField] private Transform _pivot;
         [SerializeField] private Transform _shootPoint;
         [SerializeField] private BubbleSpawner _spawner;
         [SerializeField] private BubbleGameLogic _gameLogic;
-        [SerializeField] private BubbleCatalog _bubbleCatalog;
         [SerializeField] private SpriteRenderer _currentBubble;
         [SerializeField] private SpriteRenderer _nextBubble;
 
         private GunConfig _gunConfig;
+        private BubbleCatalog _bubbleCatalog;
         private BubbleQueueService _queue;
         private BubbleGunService _service;
 
+        private void Awake()
+        {
+            IGameStartListener.Register(this);
+        }
+        
         [Inject]
-        public void Construct(GunConfig gunConfig, 
-            BubbleQueueService queue,  BubbleGunService service)
+        public void Construct(GunConfig gunConfig, BubbleCatalog bubbleCatalog,
+            BubbleQueueService queue, BubbleGunService service)
         {
             _gunConfig = gunConfig;
             _queue = queue;
             _service = service;
+            _bubbleCatalog = bubbleCatalog;
         }
         
-        private void Start()
+        public void OnStartGame()
         {
+            _queue?.Prime();
             if (_queue != null)
                 _queue.QueueChanged += RefreshPreviews;
+            
             RefreshPreviews();
         }
 
         private void OnDestroy()
         {
-            if (_queue != null) 
+            if (_queue != null)
                 _queue.QueueChanged -= RefreshPreviews;
+
+            IGameListener.Unregister(this);
         }
-        
-        private void Update()
+
+        public void OnUpdate(float deltaTime)
         {
             AimToMouse();
 
@@ -55,6 +64,12 @@ namespace BubbleGun
             {
                 TryShoot();
             }
+        }
+
+        public void OnFinishGame()
+        {
+            if (_queue != null)
+                _queue.QueueChanged -= RefreshPreviews;
         }
 
         private void AimToMouse()

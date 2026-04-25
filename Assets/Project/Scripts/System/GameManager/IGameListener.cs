@@ -27,6 +27,16 @@ namespace Project.Scripts.GameManager
     {
         void OnFinishGame();
     }
+    
+    public interface IGamePauseListener : IGameListener
+    {
+        void OnPauseGame();
+    }
+    
+    public interface IGameResumeListener : IGameListener
+    {
+        void OnResumeGame();
+    }
 
     public interface IGameUpdateListener : IGameListener
     {

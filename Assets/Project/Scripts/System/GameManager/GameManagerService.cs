@@ -130,6 +130,35 @@ namespace Project.Scripts.GameManager
                 }
             }
         }
-
+        
+        public void PauseGame()
+        {
+            foreach (var gameListener in _gameListeners)
+            {
+                if (gameListener is IGamePauseListener gamePauseListener)
+                {
+                    gamePauseListener.OnPauseGame();
+                }
+            }
+            
+            Time.timeScale = 0;
+            _gameState = EGameState.Pause;
+            Debug.Log("PAUSE");
+        }
+        
+        public void ResumeGame()
+        {
+            foreach (var gameListener in _gameListeners)
+            {
+                if (gameListener is IGameResumeListener gameResumeListener)
+                {
+                    gameResumeListener.OnResumeGame();
+                }
+            }
+            
+            Time.timeScale = 1;
+            _gameState = EGameState.Play;
+            Debug.Log("RESUME");
+        }
     }
 }

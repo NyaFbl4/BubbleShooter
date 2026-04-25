@@ -7,7 +7,7 @@ namespace Project.Scripts.GameManager
     {
         public GameBootstrap()
         {
-
+            IGameListener.Register(this);
         }
 
         public void Tick()
@@ -27,7 +27,7 @@ namespace Project.Scripts.GameManager
 
         public void Dispose()
         {
-
+            IGameListener.Unregister(this);
         }
 
         public void RestartInitialSpawn()

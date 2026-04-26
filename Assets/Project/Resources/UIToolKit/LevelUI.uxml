@@ -1,7 +1,29 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="CurrentBubble" src="project://database/Assets/Project/Prefabs/UI/CurrentBubble.uxml?fileID=9197481963319205126&amp;guid=ecf75008300f5324880ded584e9e05dc&amp;type=3#CurrentBubble" />
     <ui:VisualElement name="LevelLayout" style="flex-grow: 1;">
-        <ui:VisualElement name="HeaderPanel" style="flex-grow: 1;">
-            <ui:VisualElement style="flex-grow: 1; background-image: resource(&apos;UI/match3_purple/up&apos;); min-height: 300px; max-height: 300px;" />
+        <ui:VisualElement name="HeaderPanel" style="flex-grow: 1; height: 300px; min-height: 300px; max-height: 300px;">
+            <ui:VisualElement name="HeaderBg" style="flex-grow: 1; background-image: resource(&apos;UI/match3_purple/up&apos;); min-height: 300px; max-height: 300px; position: absolute; width: 100%; top: 0; left: 2px;" />
+            <ui:VisualElement name="CurrentBubbleContainer" style="flex-grow: 1; width: 656px; flex-direction: row; top: 0; -unity-text-align: middle-left; white-space: normal; justify-content: center; align-self: auto; align-items: center; align-content: flex-start; height: 250px; min-height: 250px; max-height: 250px;">
+                <ui:Instance template="CurrentBubble" />
+                <ui:Instance template="CurrentBubble" />
+                <ui:Instance template="CurrentBubble" />
+                <ui:Instance template="CurrentBubble" />
+                <ui:Instance template="CurrentBubble" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ProgressBar" style="flex-grow: 1; background-image: none; width: 390px; height: 100px; min-height: 100px; max-height: 100px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; background-position-y: center; background-position-x: center; -unity-background-scale-mode: stretch-to-fill; top: 63px; left: 660px; position: absolute;">
+                <ui:VisualElement name="bg" style="flex-grow: 1; background-image: resource(&apos;UI/bgload_background_purple&apos;); position: absolute; width: 100%; height: 100%;" />
+                <ui:VisualElement name="Progress" style="flex-grow: 1; background-image: none; height: 95%; -unity-background-scale-mode: scale-and-crop; display: flex; overflow: visible; width: 373px; min-height: 95%; max-height: 95%; left: 9px; top: 8px;">
+                    <ui:VisualElement name="ProgressFill" style="flex-grow: 1; background-image: resource(&apos;UI/match3_purple/load&apos;); height: 88%; -unity-background-scale-mode: scale-and-crop; display: flex; overflow: visible; width: 66%; min-height: 88%; max-height: 88%; left: 0; top: 0;" />
+                    <ui:Label text="150" name="ProgressLbl" style="position: absolute; font-size: 55px; width: 361px; -unity-text-align: upper-center;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Border" style="flex-grow: 1; background-image: resource(&apos;UI/bgload_frame_white&apos;); position: absolute; width: 100%; height: 100%; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; overflow: hidden;" />
+                <ui:VisualElement name="StartContainer" style="flex-grow: 1; position: absolute; width: 379px; flex-direction: row; top: 68px; left: 60px;">
+                    <ui:VisualElement name="1_star" style="flex-grow: 1; background-image: resource(&apos;UI/match3_purple/star_1&apos;); width: 76px; height: 50px; -unity-background-scale-mode: scale-to-fit;" />
+                    <ui:VisualElement name="1_star" style="flex-grow: 1; background-image: resource(&apos;UI/match3_purple/star_2&apos;); width: 76px; height: 50px; -unity-background-scale-mode: scale-to-fit;" />
+                    <ui:VisualElement name="1_star" style="flex-grow: 1; background-image: resource(&apos;UI/match3_purple/star_3&apos;); width: 76px; height: 50px; -unity-background-scale-mode: scale-to-fit;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
         </ui:VisualElement>
+        <ui:VisualElement name="LowerPanel" style="flex-grow: 1; background-image: resource(&apos;UI/match3_purple/down&apos;); width: 100%; height: 300px; min-height: 300px; max-height: 300px; bottom: auto; left: 0; top: 70%;" />
     </ui:VisualElement>
 </ui:UXML>

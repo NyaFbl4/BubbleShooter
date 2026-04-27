@@ -33,13 +33,11 @@ namespace BubbleField
         [Header("Data/Build")]
         [SerializeField] private BubbleSpawner _spawner;
         [SerializeField] private BubbleLevelData _levelData;
-        [SerializeField] private bool _buildOnStart = true;
         [SerializeField] private Transform _origin;
         [SerializeField] private Transform _bubblesRoot;
         [SerializeField] private int _maxRows = 12;
         [SerializeField] private float _stepX = 0.5f;
         [SerializeField] private float _stepY = 0.44f;
-        [SerializeField] private float _cellPadding = 0.01f;
 
         private int _rows;
         private int _columns;

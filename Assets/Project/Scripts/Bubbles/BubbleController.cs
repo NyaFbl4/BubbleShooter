@@ -9,7 +9,6 @@ namespace Bubbles
     {
         [SerializeField] private EBubbleType _bubbleType;
         [SerializeField] private Animator _animator;
-        // [SerializeField] private LayerMask _wallMask;
         [SerializeField] private Rigidbody2D _rb;
         [SerializeField] private float _defaultSpeed = 10f;
 

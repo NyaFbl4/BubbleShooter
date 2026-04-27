@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Bubbles;
+using Project.Scripts.GameManager;
 using Sirenix.OdinInspector;
 
 namespace BubbleField
@@ -22,7 +23,13 @@ namespace BubbleField
             public override bool Equals(object obj) => obj is Cell other && Equals(other);
             public override int GetHashCode() => HashCode.Combine(Row, Col);
         }
-
+        
+        [Header("View Window")]
+        [SerializeField] private int _visibleRows;
+        [SerializeField] private int _extraLogicalRows;
+        private int _authoredRows; 
+        private int _viewStartRow; 
+        
         [Header("Data/Build")]
         [SerializeField] private BubbleSpawner _spawner;
         [SerializeField] private BubbleLevelData _levelData;
@@ -45,12 +52,7 @@ namespace BubbleField
         private readonly List<EBubbleType> _randomMap = new();
 
         private const int MinMatchCount = 3;
-
-        private void Start()
-        {
-            if(_buildOnStart)
-                BuildFromLevelData();         
-        }
+        
 
         [Button]
         public void BuildFromLevelData()
@@ -66,7 +68,7 @@ namespace BubbleField
             SyncDimensionsFromLevelData();
             if (_rows == 0)
                 return;
-             PrepareRandomMap();
+            PrepareRandomMap();
 
             for(int r = 0; r < _rows; r++)
             {
@@ -148,6 +150,8 @@ namespace BubbleField
                 if (bubble == null) continue;
                 bubble.transform.position = CellToWorld(cell);
             }
+            
+            RefreshVisibleWindow();
         }
         
         public bool TryGetBubble(Cell cell, out BubbleController bubble) => _cells.TryGetValue(cell, out bubble);
@@ -178,8 +182,15 @@ namespace BubbleField
             int configuredRows = _levelData.Rows > 0
                 ? _levelData.Rows 
                 : (_levelData.Grid?.Count ?? 0);
-            _rows = Mathf.Min(configuredRows, _maxRows);
+            //_rows = Mathf.Min(configuredRows, _maxRows);
+            int visible = Mathf.Max(1, _visibleRows);
+            int extra = Mathf.Max(0, _extraLogicalRows);
+            _authoredRows = Mathf.Clamp(configuredRows, 0, Mathf.Max(0, _maxRows - extra));
+            _rows = _authoredRows + extra;
+            
             if (_rows <= 0) return;
+            _viewStartRow = Mathf.Max(0, _authoredRows - visible);
+            
             int configuredColumns = _levelData.Columns  > 0
                 ? _levelData.Columns  
                 : ResolveColumnsFromAuthoredGrid();
@@ -188,7 +199,7 @@ namespace BubbleField
             _evenRowWidth = _columns;
             _oddRowWidth = Mathf.Max(1, _columns - 1);
             
-            for (int i = 0; i < _rows; i++)
+            for (int i = 0; i < _authoredRows; i++)
                 _rowWidths.Add((i % 2 == 0) ? _evenRowWidth : _oddRowWidth);
         }
         
@@ -280,6 +291,7 @@ namespace BubbleField
 
             _cells[cell] = bubble;
             _reverse[bubble] = cell;
+            RefreshVisibleWindow();
         }
 
         private List<Cell> GetEmptyNeighbours(Cell cell)
@@ -369,6 +381,7 @@ namespace BubbleField
         {
             if (row < 0 || row >= _rows) return 0;
             return (row % 2 == 0) ? _evenRowWidth : _oddRowWidth;
+            
         }
 
         private bool IsValidCell(Cell cell)
@@ -385,11 +398,27 @@ namespace BubbleField
         {
             Vector3 o = _origin != null ? _origin.position : transform.position;
             float rowOffset = (cell.Row % 2 == 0) ? 0f : _stepX * 0.5f;
+            int visualRow = cell.Row - _viewStartRow;
             return new Vector3(
                 o.x + rowOffset + cell.Col * _stepX,
-                o.y - cell.Row * _stepY,
+                o.y - visualRow  * _stepY,
                 0f
             );
+        }
+
+        private void RefreshVisibleWindow()
+        {
+            int visible = Mathf.Max(1, _visibleRows);
+            foreach (var kv in _cells)
+            {
+                var cell = kv.Key;
+                var bubble = kv.Value;
+                if (bubble == null) continue;
+                
+                int vr = cell.Row - _viewStartRow;
+                bool isVisible = vr >= 0 && vr < visible;
+                //bubble.SetVisualVisible(isVisible);
+            }
         }
 
         public bool TryAttachFlyingBubble(BubbleController flying, Collider2D other, out Cell attachedCell)

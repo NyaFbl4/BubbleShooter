@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using BubbleField;
 using BubbleGun;
 using Bubbles;
+using Project.Scripts.GameManager;
 using UnityEngine;
 using VContainer;
 
@@ -24,12 +26,8 @@ namespace GameLogic
             _scrollService = scrollService;
             _queue = queue;
         }
-
-        private void Start()
-        {
-            _scrollService?.Init();
-        }
         
+
         public void RegisterFlyingBubble(BubbleController bubble)
         {
             if (bubble == null) return;

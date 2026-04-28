@@ -13,11 +13,15 @@ namespace BubbleGun
         private readonly IBubbleShootPoolService _poolService;
         private readonly List<EBubbleType> _pool = new();
 
+        private bool _hasCurrent;
+        private bool _hasNext;
+        
         public event Action QueueChanged;
         
         public EBubbleType CurrentType { get; private set; }
         public EBubbleType NextType { get; private set; }
         public bool IsPrimed { get; private set; }
+        public bool HasCurrent => _hasCurrent;
         
         public BubbleQueueService(IBubbleShootPoolService poolService)
         {
@@ -29,6 +33,8 @@ namespace BubbleGun
             RebuildPool();
             CurrentType = Roll();
             NextType = Roll();
+            _hasCurrent = true;
+            _hasNext = true;
             IsPrimed = true;
             QueueChanged?.Invoke();
         }
@@ -43,6 +49,17 @@ namespace BubbleGun
 
             CurrentType = NextType;
             NextType = Roll();
+            _hasCurrent = true;
+            _hasNext = true;
+            QueueChanged?.Invoke();
+        }
+
+        public void ClearCurrentAndNext()
+        {
+            _hasCurrent = false;
+            _hasNext = false;
+            CurrentType = default;
+            NextType = default;
             QueueChanged?.Invoke();
         }
 

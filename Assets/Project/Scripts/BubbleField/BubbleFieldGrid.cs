@@ -119,6 +119,11 @@ namespace BubbleField
             }
         }
 
+        public bool HasAnyBubbles()
+        {
+            return _cells.Count > 0;
+        }
+
         public int GetGroundRow()
         {
             int ground = -1;

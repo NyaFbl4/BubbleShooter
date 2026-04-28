@@ -23,22 +23,27 @@ namespace BubbleGun
         private BubbleCatalog _bubbleCatalog;
         private BubbleQueueService _queue;
         private BubbleGunService _service;
+        private BubbleShotsService _shots;
         
         [Inject]
         public void Construct(GunConfig gunConfig, BubbleCatalog bubbleCatalog,
-            BubbleQueueService queue, BubbleGunService service)
+            BubbleQueueService queue, BubbleGunService service, BubbleShotsService shots)
         {
             _gunConfig = gunConfig;
             _queue = queue;
             _service = service;
             _bubbleCatalog = bubbleCatalog;
+            _shots = shots;
             
             IGameListener.Register(this);
         }
         
         public void OnStartGame()
         {
+            _shots?.ResetFromLevel();
             _queue?.Prime();
+            if (_shots != null && !_shots.HasShots)
+                _queue?.ClearCurrentAndNext();
             if (_queue != null)
             {
                 _queue.QueueChanged += RefreshPreviews;
@@ -121,14 +126,18 @@ namespace BubbleGun
         
         private void TryShoot()
         {
-            if (_queue == null)
+            if (_queue == null || _shots == null)
                 return;
+            if (!_shots.HasShots) return;
+            if (!_queue.HasCurrent) return;
             
             BubbleController spawned = _service.Shoot(_spawner, _shootPoint, _queue.CurrentType, _gunConfig.ShotSpeed, _gameLogic);
             if (spawned == null)
                 return;
 
-            _queue.Advance();
+            _shots.TryConsumeOne();
+            if (_shots.HasShots) _queue.Advance();
+            else _queue.ClearCurrentAndNext();
             RefreshPreviews();
         }
 

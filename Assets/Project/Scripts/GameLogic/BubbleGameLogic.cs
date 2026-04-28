@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using BubbleField;
 using BubbleGun;
 using Bubbles;
+using MessagePipe;
 using Project.Scripts.GameManager;
+using Project.Scripts.Systems.UI.Dtos;
 using UnityEngine;
 using VContainer;
 
@@ -14,17 +16,25 @@ namespace GameLogic
         [SerializeField] private BubbleFieldGrid _grid;
         [SerializeField] private int _minMatchCount = 3;
         
+        private BubbleShotsService _shots;
+        private IGameManagerService _gameManagerService;
+        private IPublisher<GameStatusCommandDto> _gameStatusPublisher;
+        private bool _endGameTriggered;
         private IBubbleResolveService _resolveService;
         private IBubbleFieldScrollService _scrollService;
         private BubbleQueueService _queue;
 
         [Inject] 
         public void Construct(IBubbleResolveService resolveService, IBubbleFieldScrollService  scrollService,
-            BubbleQueueService  queue)
+            BubbleQueueService  queue, BubbleShotsService shots, IGameManagerService gameManagerService,
+            IPublisher<GameStatusCommandDto> gameStatusPublisher)
         { 
             _resolveService = resolveService;
             _scrollService = scrollService;
             _queue = queue;
+            _shots = shots;
+            _gameManagerService = gameManagerService;
+            _gameStatusPublisher = gameStatusPublisher;
         }
         
 
@@ -63,8 +73,27 @@ namespace GameLogic
                 _grid.RemoveCells(floating, playBurst: true);
                 boardChanged = true;
             }
-            
-            _scrollService?.OnShotResolved();
+
+            CheckWinLoseAfterShotResolved();
         }
+        
+        private void CheckWinLoseAfterShotResolved()
+         {
+            if (_endGameTriggered || _grid == null) return;
+            if (!_grid.HasAnyBubbles())
+            {
+                _endGameTriggered = true;
+                _gameStatusPublisher?.Publish(new GameStatusCommandDto { Command = EGameStatusCommand.ShowWinAndFinish });
+                _gameManagerService?.FinishGame();
+                return;
+            }
+
+            if (_shots != null && _shots.ShotsLeft <= 0)
+            {
+                _endGameTriggered = true;
+                _gameStatusPublisher?.Publish(new GameStatusCommandDto { Command = EGameStatusCommand.ShowLoseAndFinish });
+                _gameManagerService?.FinishGame();
+            }
+         }
     }
 }

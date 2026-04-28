@@ -12,5 +12,10 @@ namespace BubbleField
         public int NumBubbles;
         public List<BubbleLevelRow> Grid = new();
         public List<EBubbleType> AvailableRandomTypes = new();
+        
+        [Header("Star")]
+        public int OneStarPoints;
+        public int TwoStarPoints;
+        public int ThreeStarPoints;
     }
 }

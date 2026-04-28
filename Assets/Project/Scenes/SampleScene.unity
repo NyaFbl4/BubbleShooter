@@ -194,6 +194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 150878506}
   - component: {fileID: 150878507}
+  - component: {fileID: 150878508}
   m_Layer: 0
   m_Name: LevelUI
   m_TagString: Untagged
@@ -231,7 +232,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: 4bf90158b697dbd488377e46b779a745, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 6648cef0899288247ba8059690ccb246, type: 3}
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Position: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -239,6 +240,18 @@ MonoBehaviour:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &150878508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 150878505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85b6db79d91942b49cb62b200432a404, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.UI.LevelUIView.LevelUIView
 --- !u!1 &199038558
 GameObject:
   m_ObjectHideFlags: 0
@@ -588,7 +601,7 @@ Transform:
   m_GameObject: {fileID: 539001753}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.25, z: 0}
+  m_LocalPosition: {x: 0, y: -0.388, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1276,13 +1289,11 @@ MonoBehaviour:
   _extraLogicalRows: 0
   _spawner: {fileID: 540127717}
   _levelData: {fileID: 11400000, guid: c14c1abff091dfc49bc00f303657f4c7, type: 2}
-  _buildOnStart: 1
   _origin: {fileID: 1810119138}
   _bubblesRoot: {fileID: 1810119138}
   _maxRows: 12
   _stepX: 0.5
   _stepY: 0.44
-  _cellPadding: 0.01
 --- !u!1 &1488272230
 GameObject:
   m_ObjectHideFlags: 0

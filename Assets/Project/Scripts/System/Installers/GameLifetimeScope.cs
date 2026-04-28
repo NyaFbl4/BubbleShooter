@@ -54,6 +54,7 @@ namespace Installers
             builder.RegisterEntryPoint<GameBootstrap>(Lifetime.Singleton).As<IGameBootstrapControl>();
             builder.Register<BubbleGunService>(Lifetime.Singleton);
             builder.Register<BubbleQueueService>(Lifetime.Singleton);
+            builder.Register<BubbleShotsService>(Lifetime.Singleton);
             builder.Register<IBubbleResolveService, BubbleResolveService>(Lifetime.Singleton);
             builder.Register<IBubbleFieldScrollService, BubbleFieldScrollService>(Lifetime.Singleton);
             builder.Register<IBubbleShootPoolService, BubbleShootPoolService>(Lifetime.Singleton);

@@ -5,7 +5,9 @@ using Bubbles;
 using GameLogic;
 using MessagePipe;
 using Project.Scripts.GameManager;
+using Project.Scripts.System.UseCases;
 using Project.Scripts.Systems.UI;
+using Project.Scripts.UI.LevelUIView;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -28,9 +30,17 @@ namespace Installers
         protected override void Configure(IContainerBuilder builder)
         {
             RegisterSystem(builder);
+            RegisterUseCases(builder);
             RegisterViews(builder);
+            RegisterPresenters(builder);
             RegisterComponentOnScene(builder);
             RegisterConfigs(builder);
+        }
+
+        private void RegisterUseCases(IContainerBuilder builder)
+        {
+            builder.RegisterEntryPoint<HidePopUpUseCase>(Lifetime.Singleton);
+            builder.RegisterEntryPoint<ShowPopUpUseCase>(Lifetime.Singleton);
         }
 
         private void RegisterViews(IContainerBuilder builder)
@@ -38,12 +48,12 @@ namespace Installers
             if (_layoutsRepository == null)
                 return;
 
-            foreach (var view in _layoutsRepository.Views)
+            foreach (var prefab in _layoutsRepository.Views)
             {
-                if (view ==  null)
+                if (prefab ==  null)
                     continue;
                 
-                builder.RegisterComponentInNewPrefab(view, Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
+                builder.RegisterComponentInNewPrefab(prefab, Lifetime.Scoped).AsSelf().AsImplementedInterfaces();
             }
         }
         
@@ -52,6 +62,8 @@ namespace Installers
             builder.RegisterMessagePipe();
             builder.RegisterEntryPoint<GameManagerService>(Lifetime.Singleton).As<IGameManagerService>();
             builder.RegisterEntryPoint<GameBootstrap>(Lifetime.Singleton).As<IGameBootstrapControl>();
+            builder.RegisterEntryPoint<UIController>().As<IUIController>();
+            builder.RegisterEntryPoint<UIMessageHandler>(Lifetime.Singleton);
             builder.Register<BubbleGunService>(Lifetime.Singleton);
             builder.Register<BubbleQueueService>(Lifetime.Singleton);
             builder.Register<BubbleShotsService>(Lifetime.Singleton);
@@ -62,7 +74,7 @@ namespace Installers
 
         private void RegisterPresenters(IContainerBuilder builder)
         {
-            
+            builder.RegisterEntryPoint<LevelUIPresenter>(Lifetime.Singleton).As<ILevelUIPresenter>();
         }
 
         private void RegisterConfigs(IContainerBuilder builder)

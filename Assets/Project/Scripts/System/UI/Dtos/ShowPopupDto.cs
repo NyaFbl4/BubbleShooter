@@ -6,8 +6,4 @@ namespace Project.Scripts.Systems.UI.Dtos
     {
         public Type TargetPopUpType { get; set; }
     }
-
-    public class OpenPauseSettingsDto
-    {
-    }
 }

@@ -848,7 +848,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1082976754
 Transform:
   m_ObjectHideFlags: 0
@@ -977,6 +977,7 @@ MonoBehaviour:
   _shootPoint: {fileID: 1733848463}
   _spawner: {fileID: 540127717}
   _gameLogic: {fileID: 1512586476}
+  _currentBubbleOnGun: {fileID: 1211918506}
 --- !u!210 &1162155170
 SortingGroup:
   m_ObjectHideFlags: 0

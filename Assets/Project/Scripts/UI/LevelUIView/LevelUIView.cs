@@ -8,9 +8,10 @@ namespace Project.Scripts.UI.LevelUIView
     public class LevelUIView : LayoutViewBase, ILevelUIView
     {
         private Button _changeBubbleBtn;
-        private VisualElement _currentBubbleImg;
+        //private VisualElement _currentBubbleImg;
         private VisualElement _nextBubbleImg;
         private Label _progressLbl;
+        private Label _currentBubbleLbl;
 
         public event Action ChangeBubbleBtnClicked;
 
@@ -20,9 +21,10 @@ namespace Project.Scripts.UI.LevelUIView
 
             _changeBubbleBtn = _root.Q<Button>("ChangeBubbleButton");
             var currentBubbleContainer = _root.Q<VisualElement>("CurrentBubbleContainer");
-            _currentBubbleImg = currentBubbleContainer?.Q<VisualElement>("BubbleImg");
+            //_currentBubbleImg = currentBubbleContainer?.Q<VisualElement>("BubbleImg");
             _nextBubbleImg = _root.Q<VisualElement>("ChangeBubbleImg");
             _progressLbl = _root.Q<Label>("ProgressLbl");
+            _currentBubbleLbl = _root.Q<Label>("CurrentBubblesText");
 
             if (_changeBubbleBtn != null)
                 _changeBubbleBtn.clicked += OnChangeBubbleBtnClicked;
@@ -41,17 +43,17 @@ namespace Project.Scripts.UI.LevelUIView
             _changeBubbleBtn?.SetEnabled(enabled);
         }
 
-        public void SetProgressText(string text)
+        public void SetCurrentBubblesCountText(string text)
         {
-            if (_progressLbl == null)
+            if (_currentBubbleLbl == null)
                 return;
 
-            _progressLbl.text = text;
+            _currentBubbleLbl.text = text;
         }
 
         public void SetCurrentBubbleSprite(Sprite sprite)
         {
-            SetBubbleSprite(_currentBubbleImg, sprite);
+            //SetBubbleSprite(_currentBubbleImg, sprite);
         }
 
         public void SetNextBubbleSprite(Sprite sprite)

@@ -29,6 +29,7 @@
                 <ui:VisualElement name="ChangeBubbleImg" style="flex-grow: 1; background-image: resource(&apos;Bubbles/BlueSwirlCandy&apos;); background-size: 80% 80%;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; background-image: resource(&apos;UI/SwitchIcon&apos;); width: 100px; height: 100px; min-height: 100px; max-height: 100px; min-width: 100px; max-width: 100px; top: 130px; left: 60px;" />
+            <ui:Label text="10" name="CurrentBubblesText" style="font-size: 65px; top: 76px;" />
         </ui:Button>
     </ui:VisualElement>
 </ui:UXML>

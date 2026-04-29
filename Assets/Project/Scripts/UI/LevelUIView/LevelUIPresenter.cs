@@ -117,7 +117,7 @@ namespace Project.Scripts.UI.LevelUIView
 
         private void OnShotsChanged(int shotsLeft)
         {
-            _layoutView.SetProgressText(shotsLeft.ToString());
+            _layoutView.SetCurrentBubblesCountText(shotsLeft.ToString());
             UpdateSwapEnabled();
         }
 

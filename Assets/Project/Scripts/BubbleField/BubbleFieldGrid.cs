@@ -509,8 +509,9 @@ namespace BubbleField
             return true;
         }
 
-        public void RemoveCells(List<Cell> cells, bool playBurst)
+        public int RemoveCells(List<Cell> cells, bool playBurst)
         {
+            int removedCount = 0;
             for (int i = 0; i < cells.Count; i++)
             {
                 Cell cell = cells[i];
@@ -525,7 +526,11 @@ namespace BubbleField
                     bubble.Burst();
                 else
                     Destroy(bubble.gameObject);
+
+                removedCount++;
             }
+
+            return removedCount;
         }
     }
 }

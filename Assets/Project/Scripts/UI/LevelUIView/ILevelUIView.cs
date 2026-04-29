@@ -9,6 +9,7 @@ namespace Project.Scripts.UI.LevelUIView
         event Action ChangeBubbleBtnClicked;
         void SetSwapButtonEnabled(bool enabled);
         void SetCurrentBubblesCountText(string text);
+        void SetScoreText(string text);
         void SetCurrentBubbleSprite(Sprite sprite);
         void SetNextBubbleSprite(Sprite sprite);
     }

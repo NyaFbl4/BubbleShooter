@@ -23,16 +23,18 @@ namespace GameLogic
         private IBubbleResolveService _resolveService;
         private IBubbleFieldScrollService _scrollService;
         private BubbleQueueService _queue;
+        private BubbleScoreService _scoreService;
 
         [Inject] 
         public void Construct(IBubbleResolveService resolveService, IBubbleFieldScrollService  scrollService,
-            BubbleQueueService  queue, BubbleShotsService shots, IGameManagerService gameManagerService,
+            BubbleQueueService  queue, BubbleShotsService shots, BubbleScoreService scoreService, IGameManagerService gameManagerService,
             IPublisher<GameStatusCommandDto> gameStatusPublisher)
         { 
             _resolveService = resolveService;
             _scrollService = scrollService;
             _queue = queue;
             _shots = shots;
+            _scoreService = scoreService;
             _gameManagerService = gameManagerService;
             _gameStatusPublisher = gameStatusPublisher;
         }
@@ -62,13 +64,15 @@ namespace GameLogic
             var resolved = _resolveService.Resolve(_grid, attachedCell, _minMatchCount);
             if (resolved.Matched.Count > 0)
             {
-                _grid.RemoveCells(resolved.Matched, playBurst: true);
+                int removedMatched = _grid.RemoveCells(resolved.Matched, playBurst: true);
+                _scoreService?.AddDestroyedBubbles(removedMatched);
             }
             
             var floating = _resolveService.CollectFloating(_grid);
             if (floating.Count > 0)
             {
-                _grid.RemoveCells(floating, playBurst: true);
+                int removedFloating = _grid.RemoveCells(floating, playBurst: true);
+                _scoreService?.AddDestroyedBubbles(removedFloating);
             }
 
             CheckWinLoseAfterShotResolved();

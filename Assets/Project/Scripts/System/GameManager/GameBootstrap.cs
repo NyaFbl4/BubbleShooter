@@ -10,12 +10,14 @@ namespace Project.Scripts.GameManager
         private readonly BubbleFieldGrid _bubbleFieldGrid;
         private readonly BubbleGameLogic _bubbleGameLogic;
         private readonly IBubbleFieldScrollService  _scrollService;
+        private readonly BubbleScoreService _scoreService;
 
-        public GameBootstrap(BubbleFieldGrid bubbleFieldGrid, BubbleGameLogic bubbleGameLogic, IBubbleFieldScrollService scrollService)
+        public GameBootstrap(BubbleFieldGrid bubbleFieldGrid, BubbleGameLogic bubbleGameLogic, IBubbleFieldScrollService scrollService, BubbleScoreService scoreService)
         {
             _bubbleFieldGrid = bubbleFieldGrid;
             _bubbleGameLogic = bubbleGameLogic;
             _scrollService = scrollService;
+            _scoreService = scoreService;
             
             IGameListener.Register(this);
         }
@@ -27,6 +29,7 @@ namespace Project.Scripts.GameManager
 
         public void OnStartGame()
         {
+            _scoreService?.Reset();
             _bubbleFieldGrid.BuildFromLevelData();
             _scrollService?.Init();
         }

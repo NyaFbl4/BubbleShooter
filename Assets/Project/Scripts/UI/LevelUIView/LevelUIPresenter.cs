@@ -15,6 +15,7 @@ namespace Project.Scripts.UI.LevelUIView
         [Inject] private readonly BubbleQueueService _queue;
         [Inject] private readonly BubbleCatalog _catalog;
         [Inject] private readonly BubbleShotsService _shots;
+        [Inject] private readonly BubbleScoreService _score;
         [Inject] private readonly GunConfig _gunConfig;
         [Inject] private readonly IPublisher<SwapBubbleCommandDto> _swapPublisher;
         [Inject] private readonly IPublisher<ShowPopupDto> _showPopUpPublisher;
@@ -45,9 +46,12 @@ namespace Project.Scripts.UI.LevelUIView
                 _queue.QueueChanged += RefreshQueueView;
             if (_shots != null)
                 _shots.ShotsChanged += OnShotsChanged;
+            if (_score != null)
+                _score.ScoreChanged += OnScoreChanged;
 
             RefreshQueueView();
             OnShotsChanged(_shots?.ShotsLeft ?? 0);
+            OnScoreChanged(_score?.Score ?? 0);
         }
 
         public override void Dispose()
@@ -57,6 +61,8 @@ namespace Project.Scripts.UI.LevelUIView
                 _queue.QueueChanged -= RefreshQueueView;
             if (_shots != null)
                 _shots.ShotsChanged -= OnShotsChanged;
+            if (_score != null)
+                _score.ScoreChanged -= OnScoreChanged;
 
             IGameListener.Unregister(this);
             base.Dispose();
@@ -119,6 +125,11 @@ namespace Project.Scripts.UI.LevelUIView
         {
             _layoutView.SetCurrentBubblesCountText(shotsLeft.ToString());
             UpdateSwapEnabled();
+        }
+
+        private void OnScoreChanged(int score)
+        {
+            _layoutView.SetScoreText(score.ToString());
         }
 
         private void UpdateSwapEnabled()

@@ -51,6 +51,14 @@ namespace Project.Scripts.UI.LevelUIView
             _currentBubbleLbl.text = text;
         }
 
+        public void SetScoreText(string text)
+        {
+            if (_progressLbl == null)
+                return;
+
+            _progressLbl.text = text;
+        }
+
         public void SetCurrentBubbleSprite(Sprite sprite)
         {
             //SetBubbleSprite(_currentBubbleImg, sprite);

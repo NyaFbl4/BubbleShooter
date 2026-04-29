@@ -1130,9 +1130,15 @@ MonoBehaviour:
   _visibleRows: 0
   _extraLogicalRows: 0
   _spawner: {fileID: 540127717}
-  _levelData: {fileID: 11400000, guid: c14c1abff091dfc49bc00f303657f4c7, type: 2}
+  _levelData: {fileID: 11400000, guid: 3d209845eadd66b48b46bcd1f2a5b9c9, type: 2}
   _origin: {fileID: 1810119138}
   _bubblesRoot: {fileID: 1810119138}
+  _topLinePrefab: {fileID: 6454225183702234868, guid: 7ca2abf96eb902246aaf189ee84cf961, type: 3}
+  _autoCreateTopLine: 1
+  _topLineWidthPadding: 0.25
+  _topLineHeight: 0.2
+  _topLineLocalY: 0
+  _topLineFrontPadding: 0.02
   _maxRows: 12
   _stepX: 0.5
   _stepY: 0.44

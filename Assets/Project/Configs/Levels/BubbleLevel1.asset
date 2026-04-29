@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: BubbleLevel1
   m_EditorClassIdentifier: Assembly-CSharp::BubbleField.BubbleLevelData
   Rows: 5
+  VisibleRows: 5
   Columns: 10
-  NumBubbles: 10
+  NumBubbles: 25
   Grid:
   - {fileID: 11400000, guid: 1a63782a71854375804536f1e1342060, type: 2}
   - {fileID: 11400000, guid: ff85a60e40d24484be3d85d5077e148e, type: 2}
   - {fileID: 11400000, guid: bc01dbd0fe7b47a39f81070696a47ef3, type: 2}
   - {fileID: 11400000, guid: afeccc644c5e402abe1c25aca604fe4a, type: 2}
   AvailableRandomTypes: 000000000100000002000000
+  OneStarPoints: 0
+  TwoStarPoints: 0
+  ThreeStarPoints: 0

@@ -60,21 +60,19 @@ namespace GameLogic
             }
             
             var resolved = _resolveService.Resolve(_grid, attachedCell, _minMatchCount);
-            var boardChanged = false;
             if (resolved.Matched.Count > 0)
             {
                 _grid.RemoveCells(resolved.Matched, playBurst: true);
-                boardChanged = true;
             }
             
             var floating = _resolveService.CollectFloating(_grid);
             if (floating.Count > 0)
             {
                 _grid.RemoveCells(floating, playBurst: true);
-                boardChanged = true;
             }
 
             CheckWinLoseAfterShotResolved();
+            _scrollService?.OnShotResolved();
         }
         
         private void CheckWinLoseAfterShotResolved()

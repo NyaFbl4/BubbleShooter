@@ -35,6 +35,13 @@ namespace BubbleField
         [SerializeField] private BubbleLevelData _levelData;
         [SerializeField] private Transform _origin;
         [SerializeField] private Transform _bubblesRoot;
+        [Header("Top Line")]
+        [SerializeField] private TopBound _topLinePrefab;
+        [SerializeField] private bool _autoCreateTopLine = true;
+        [SerializeField] private float _topLineWidthPadding = 0.25f;
+        [SerializeField] private float _topLineHeight = 0.2f;
+        [SerializeField] private float _topLineLocalY = 0f;
+        [SerializeField] private float _topLineFrontPadding = 0.02f;
         [SerializeField] private int _maxRows = 12;
         [SerializeField] private float _stepX = 0.5f;
         [SerializeField] private float _stepY = 0.44f;
@@ -48,6 +55,7 @@ namespace BubbleField
         private readonly Dictionary<Cell, BubbleController> _cells = new();
         private readonly Dictionary<BubbleController, Cell> _reverse = new();
         private readonly List<EBubbleType> _randomMap = new();
+        private TopBound _topLineInstance;
 
         private const int MinMatchCount = 3;
         
@@ -66,6 +74,8 @@ namespace BubbleField
             SyncDimensionsFromLevelData();
             if (_rows == 0)
                 return;
+
+            EnsureTopLine();
             PrepareRandomMap();
 
             for(int r = 0; r < _rows; r++)
@@ -204,6 +214,49 @@ namespace BubbleField
             
             for (int i = 0; i < _authoredRows; i++)
                 _rowWidths.Add((i % 2 == 0) ? _evenRowWidth : _oddRowWidth);
+        }
+
+        private void EnsureTopLine()
+        {
+            if (!_autoCreateTopLine)
+                return;
+
+            if (_topLineInstance == null)
+                _topLineInstance = GetComponentInChildren<TopBound>(true);
+
+            if (_topLineInstance == null && _topLinePrefab != null)
+            {
+                var parent = _origin != null ? _origin : transform;
+                _topLineInstance = Instantiate(_topLinePrefab, parent);
+                _topLineInstance.name = _topLinePrefab.name;
+            }
+
+            if (_topLineInstance == null)
+                return;
+
+            var parentTransform = _origin != null ? _origin : transform;
+            if (_topLineInstance.transform.parent != parentTransform)
+                _topLineInstance.transform.SetParent(parentTransform, false);
+
+            float topRowWidth = Mathf.Max(1f, _evenRowWidth * _stepX + _topLineWidthPadding);
+            float centerX = (_evenRowWidth - 1) * _stepX * 0.5f;
+            // Put ceiling slightly above the top-row bubbles (in front of row), not through their centers.
+            float bubbleRadius = _stepX * 0.5f;
+            float topRowLocalY = (_viewStartRow * _stepY)
+                                 + bubbleRadius
+                                 + (_topLineHeight * 0.5f)
+                                 + _topLineFrontPadding
+                                 + _topLineLocalY;
+            _topLineInstance.transform.localPosition = new Vector3(centerX, topRowLocalY, 0f);
+            _topLineInstance.transform.localRotation = Quaternion.identity;
+            _topLineInstance.transform.localScale = Vector3.one;
+
+            var collider = _topLineInstance.GetComponent<Collider2D>();
+            if (collider != null)
+                collider.isTrigger = true;
+
+            if (collider is BoxCollider2D box)
+                box.size = new Vector2(topRowWidth, Mathf.Max(0.01f, _topLineHeight));
         }
         
         private int ResolveColumnsFromAuthoredGrid()

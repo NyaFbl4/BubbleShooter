@@ -41,6 +41,7 @@ namespace Installers
         {
             builder.RegisterEntryPoint<HidePopUpUseCase>(Lifetime.Singleton);
             builder.RegisterEntryPoint<ShowPopUpUseCase>(Lifetime.Singleton);
+            builder.Register<AddScoreUseCase>(Lifetime.Singleton);
         }
 
         private void RegisterViews(IContainerBuilder builder)

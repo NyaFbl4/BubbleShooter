@@ -1,6 +1,7 @@
 using System;
 using BubbleField;
 using GameLogic;
+using Project.Scripts.System.UseCases;
 using VContainer.Unity;
 
 namespace Project.Scripts.GameManager
@@ -10,14 +11,14 @@ namespace Project.Scripts.GameManager
         private readonly BubbleFieldGrid _bubbleFieldGrid;
         private readonly BubbleGameLogic _bubbleGameLogic;
         private readonly IBubbleFieldScrollService  _scrollService;
-        private readonly BubbleScoreService _scoreService;
+        private readonly AddScoreUseCase _addScoreUseCase;
 
-        public GameBootstrap(BubbleFieldGrid bubbleFieldGrid, BubbleGameLogic bubbleGameLogic, IBubbleFieldScrollService scrollService, BubbleScoreService scoreService)
+        public GameBootstrap(BubbleFieldGrid bubbleFieldGrid, BubbleGameLogic bubbleGameLogic, IBubbleFieldScrollService scrollService, AddScoreUseCase addScoreUseCase)
         {
             _bubbleFieldGrid = bubbleFieldGrid;
             _bubbleGameLogic = bubbleGameLogic;
             _scrollService = scrollService;
-            _scoreService = scoreService;
+            _addScoreUseCase = addScoreUseCase;
             
             IGameListener.Register(this);
         }
@@ -29,7 +30,7 @@ namespace Project.Scripts.GameManager
 
         public void OnStartGame()
         {
-            _scoreService?.Reset();
+            _addScoreUseCase?.ResetScore();
             _bubbleFieldGrid.BuildFromLevelData();
             _scrollService?.Init();
         }

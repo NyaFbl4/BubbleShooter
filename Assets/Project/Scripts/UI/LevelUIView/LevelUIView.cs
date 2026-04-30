@@ -10,6 +10,7 @@ namespace Project.Scripts.UI.LevelUIView
         private Button _changeBubbleBtn;
         //private VisualElement _currentBubbleImg;
         private VisualElement _nextBubbleImg;
+        private VisualElement _progressFill;
         private Label _progressLbl;
         private Label _currentBubbleLbl;
 
@@ -25,10 +26,12 @@ namespace Project.Scripts.UI.LevelUIView
             _nextBubbleImg = _root.Q<VisualElement>("ChangeBubbleImg");
             _progressLbl = _root.Q<Label>("ProgressLbl");
             _currentBubbleLbl = _root.Q<Label>("CurrentBubblesText");
+            _progressFill = _root.Q<VisualElement>("ProgressFill");
 
             if (_changeBubbleBtn != null)
                 _changeBubbleBtn.clicked += OnChangeBubbleBtnClicked;
-            
+
+            SetProgress(0);
             base.Show();
         }
 
@@ -36,6 +39,15 @@ namespace Project.Scripts.UI.LevelUIView
         {
             if (_changeBubbleBtn != null)
                 _changeBubbleBtn.clicked -= OnChangeBubbleBtnClicked;
+        }
+
+        public void SetProgress(int progress)
+        {
+            if (_progressFill == null)
+                return;
+
+            _progressFill.style.width = Length.Percent(Mathf.Clamp(progress, 0, 100));
+            _progressFill.MarkDirtyRepaint();
         }
 
         public void SetSwapButtonEnabled(bool enabled)
@@ -57,11 +69,6 @@ namespace Project.Scripts.UI.LevelUIView
                 return;
 
             _progressLbl.text = text;
-        }
-
-        public void SetCurrentBubbleSprite(Sprite sprite)
-        {
-            //SetBubbleSprite(_currentBubbleImg, sprite);
         }
 
         public void SetNextBubbleSprite(Sprite sprite)

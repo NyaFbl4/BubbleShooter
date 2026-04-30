@@ -15,7 +15,6 @@ namespace Project.Scripts.UI.LevelUIView
         [Inject] private readonly BubbleQueueService _queue;
         [Inject] private readonly BubbleCatalog _catalog;
         [Inject] private readonly BubbleShotsService _shots;
-        [Inject] private readonly BubbleScoreService _score;
         [Inject] private readonly GunConfig _gunConfig;
         [Inject] private readonly IPublisher<SwapBubbleCommandDto> _swapPublisher;
         [Inject] private readonly IPublisher<ShowPopupDto> _showPopUpPublisher;
@@ -46,12 +45,11 @@ namespace Project.Scripts.UI.LevelUIView
                 _queue.QueueChanged += RefreshQueueView;
             if (_shots != null)
                 _shots.ShotsChanged += OnShotsChanged;
-            if (_score != null)
-                _score.ScoreChanged += OnScoreChanged;
 
             RefreshQueueView();
             OnShotsChanged(_shots?.ShotsLeft ?? 0);
-            OnScoreChanged(_score?.Score ?? 0);
+            SetScoreText("0");
+            SetCurrentProgress(0);
         }
 
         public override void Dispose()
@@ -61,8 +59,6 @@ namespace Project.Scripts.UI.LevelUIView
                 _queue.QueueChanged -= RefreshQueueView;
             if (_shots != null)
                 _shots.ShotsChanged -= OnShotsChanged;
-            if (_score != null)
-                _score.ScoreChanged -= OnScoreChanged;
 
             IGameListener.Unregister(this);
             base.Dispose();
@@ -72,22 +68,15 @@ namespace Project.Scripts.UI.LevelUIView
         {
             if (_queue == null)
             {
-                SetCurrentBubbleSprite(null);
                 SetNextBubbleSprite(null);
                 return;
             }
 
             var currentSprite = _queue.HasCurrent ? ResolveBubbleSprite(_queue.CurrentType) : null;
             var nextSprite = _queue.HasNext ? ResolveBubbleSprite(_queue.NextType) : null;
-
-            SetCurrentBubbleSprite(currentSprite);
+            
             SetNextBubbleSprite(nextSprite);
             UpdateSwapEnabled();
-        }
-
-        public void SetCurrentBubbleSprite(Sprite sprite)
-        {
-            _layoutView.SetCurrentBubbleSprite(sprite);
         }
 
         public void SetNextBubbleSprite(Sprite sprite)
@@ -127,9 +116,9 @@ namespace Project.Scripts.UI.LevelUIView
             UpdateSwapEnabled();
         }
 
-        private void OnScoreChanged(int score)
+        public void SetScoreText(string text)
         {
-            _layoutView.SetScoreText(score.ToString());
+            _layoutView.SetScoreText(text);
         }
 
         private void UpdateSwapEnabled()
@@ -151,6 +140,11 @@ namespace Project.Scripts.UI.LevelUIView
             return _queue.HasCurrent && _queue.HasNext;
         }
 
+        public void SetCurrentProgress(int progress)
+        {
+            _layoutView.SetProgress(progress);
+        }
+        
         public void OnStartGame()
         {
             /*_showPopUpPublisher.Publish(new ShowPopupDto

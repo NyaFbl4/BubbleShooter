@@ -5,6 +5,7 @@ using BubbleGun;
 using Bubbles;
 using MessagePipe;
 using Project.Scripts.GameManager;
+using Project.Scripts.System.UseCases;
 using Project.Scripts.Systems.UI.Dtos;
 using UnityEngine;
 using VContainer;
@@ -23,18 +24,18 @@ namespace GameLogic
         private IBubbleResolveService _resolveService;
         private IBubbleFieldScrollService _scrollService;
         private BubbleQueueService _queue;
-        private BubbleScoreService _scoreService;
+        private AddScoreUseCase _addScoreUseCase;
 
         [Inject] 
         public void Construct(IBubbleResolveService resolveService, IBubbleFieldScrollService  scrollService,
-            BubbleQueueService  queue, BubbleShotsService shots, BubbleScoreService scoreService, IGameManagerService gameManagerService,
+            BubbleQueueService  queue, BubbleShotsService shots, AddScoreUseCase addScoreUseCase, IGameManagerService gameManagerService,
             IPublisher<GameStatusCommandDto> gameStatusPublisher)
         { 
             _resolveService = resolveService;
             _scrollService = scrollService;
             _queue = queue;
             _shots = shots;
-            _scoreService = scoreService;
+            _addScoreUseCase = addScoreUseCase;
             _gameManagerService = gameManagerService;
             _gameStatusPublisher = gameStatusPublisher;
         }
@@ -65,14 +66,14 @@ namespace GameLogic
             if (resolved.Matched.Count > 0)
             {
                 int removedMatched = _grid.RemoveCells(resolved.Matched, playBurst: true);
-                _scoreService?.AddDestroyedBubbles(removedMatched);
+                _addScoreUseCase?.AddDestroyedBubbles(removedMatched);
             }
             
             var floating = _resolveService.CollectFloating(_grid);
             if (floating.Count > 0)
             {
                 int removedFloating = _grid.RemoveCells(floating, playBurst: true);
-                _scoreService?.AddDestroyedBubbles(removedFloating);
+                _addScoreUseCase?.AddDestroyedBubbles(removedFloating);
             }
 
             CheckWinLoseAfterShotResolved();

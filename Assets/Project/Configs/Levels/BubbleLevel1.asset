@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: BubbleLevel1
   m_EditorClassIdentifier: Assembly-CSharp::BubbleField.BubbleLevelData
   Rows: 5
-  VisibleRows: 5
   Columns: 10
   NumBubbles: 25
   Grid:
@@ -22,6 +21,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bc01dbd0fe7b47a39f81070696a47ef3, type: 2}
   - {fileID: 11400000, guid: afeccc644c5e402abe1c25aca604fe4a, type: 2}
   AvailableRandomTypes: 000000000100000002000000
-  OneStarPoints: 0
-  TwoStarPoints: 0
-  ThreeStarPoints: 0
+  OneStarPoints: 145
+  TwoStarPoints: 290
+  ThreeStarPoints: 440

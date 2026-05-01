@@ -12,13 +12,20 @@ namespace Project.Scripts.GameManager
         private readonly BubbleGameLogic _bubbleGameLogic;
         private readonly IBubbleFieldScrollService  _scrollService;
         private readonly AddScoreUseCase _addScoreUseCase;
+        private readonly LoadLevelService _loadLevelService;
 
-        public GameBootstrap(BubbleFieldGrid bubbleFieldGrid, BubbleGameLogic bubbleGameLogic, IBubbleFieldScrollService scrollService, AddScoreUseCase addScoreUseCase)
+        public GameBootstrap(
+            BubbleFieldGrid bubbleFieldGrid,
+            BubbleGameLogic bubbleGameLogic,
+            IBubbleFieldScrollService scrollService,
+            AddScoreUseCase addScoreUseCase,
+            LoadLevelService loadLevelService)
         {
             _bubbleFieldGrid = bubbleFieldGrid;
             _bubbleGameLogic = bubbleGameLogic;
             _scrollService = scrollService;
             _addScoreUseCase = addScoreUseCase;
+            _loadLevelService = loadLevelService;
             
             IGameListener.Register(this);
         }
@@ -30,6 +37,7 @@ namespace Project.Scripts.GameManager
 
         public void OnStartGame()
         {
+            _loadLevelService?.LogLevelBubblesSummary();
             _addScoreUseCase?.ResetScore();
             _bubbleFieldGrid.BuildFromLevelData();
             _scrollService?.Init();

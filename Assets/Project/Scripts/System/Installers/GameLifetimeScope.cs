@@ -69,6 +69,7 @@ namespace Installers
             builder.Register<BubbleQueueService>(Lifetime.Singleton);
             builder.Register<BubbleShotsService>(Lifetime.Singleton);
             builder.Register<BubbleScoreService>(Lifetime.Singleton);
+            builder.Register<LoadLevelService>(Lifetime.Singleton);
             builder.Register<IBubbleResolveService, BubbleResolveService>(Lifetime.Singleton);
             builder.Register<IBubbleFieldScrollService, BubbleFieldScrollService>(Lifetime.Singleton);
             builder.Register<IBubbleShootPoolService, BubbleShootPoolService>(Lifetime.Singleton);

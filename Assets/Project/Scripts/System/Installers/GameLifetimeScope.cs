@@ -1,4 +1,4 @@
-using Assets.Project.Scripts.System.Messaging;
+﻿using Assets.Project.Scripts.System.Messaging;
 using BubbleField;
 using BubbleGun;
 using Bubbles;
@@ -9,6 +9,8 @@ using Project.Scripts.System.UseCases;
 using Project.Scripts.Systems.UI;
 using Project.Scripts.UI.LevelMapUI;
 using Project.Scripts.UI.LevelUIView;
+using Project.Scripts.UI.PauseUI;
+using Project.Scripts.UI.SettingsUI;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -84,6 +86,8 @@ namespace Installers
         {
             builder.RegisterEntryPoint<LevelUIPresenter>(Lifetime.Singleton).As<ILevelUIPresenter>();
             builder.RegisterEntryPoint<LevelMapUIPresenter>(Lifetime.Singleton).As<ILevelMapUIPresenter>();
+            builder.RegisterEntryPoint<SettingsUIPresenter>(Lifetime.Singleton).As<ISettingsUIPresenter>();
+            builder.RegisterEntryPoint<PauseUIPresenter>(Lifetime.Singleton).As<IPauseUIPresenter>();
         }
 
         private void RegisterConfigs(IContainerBuilder builder)
@@ -123,3 +127,4 @@ namespace Installers
         }
     }
 }
+

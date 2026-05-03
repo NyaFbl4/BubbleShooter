@@ -1,0 +1,42 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="settings-overlay" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.45); align-items: center; justify-content: center; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
+        <ui:VisualElement name="settings-panel" style="width: 820px; max-width: 92%; max-height: 94%; min-height: 520px; background-image: resource(&apos;UI/Settings Panel/bg&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill; position: relative; align-items: center; justify-content: flex-start; padding-left: 28px; padding-right: 28px; padding-top: 38px; padding-bottom: 30px;">
+            <ui:VisualElement name="lablel-panel" style="background-image: resource(&apos;UI/banner_no_bg&apos;); width: 500px; max-width: 78%; height: 180px; justify-content: center; align-items: center; margin-bottom: 4px; top: -103px;">
+                <ui:Label name="setting-title-label" text="SETTINGS" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; unity-text-align: middle-center; -unity-font-style: bold; font-size: 50px; color: rgb(255, 242, 230); -unity-text-outline-width: 4px; -unity-text-outline-color: rgb(158, 54, 78);" />
+            </ui:VisualElement>
+            <ui:Button name="settings-close-button" style="position: absolute; right: -31px; top: -25px; width: 116px; height: 116px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-image: resource(&apos;UI/Settings Panel/close_2&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;" />
+            <ui:VisualElement name="settings-content" style="width: 100%; max-width: 620px; flex-grow: 1; min-height: 0; background-image: resource(&apos;UI/Settings Panel/table&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill; padding-left: 38px; padding-right: 38px; padding-top: 26px; padding-bottom: 26px; justify-content: center; top: -94px;">
+                <ui:VisualElement name="settings-music-group" style="justify-content: flex-start; margin-bottom: 16px;">
+                    <ui:VisualElement name="settings-music-row" style="min-height: 70px; flex-direction: row; align-items: center; justify-content: space-between;">
+                        <ui:Label name="settings-music-label" text="Music" style="color: rgb(104, 52, 22); -unity-font-style: bold; font-size: 42px; letter-spacing: 1px; flex-shrink: 1;" />
+                        <ui:Button name="settings-music-toggle-button" style="width: 150px; height: 60px; min-width: 150px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-image: resource(&apos;UI/Settings Panel/on_1&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;">
+                            <ui:Label name="settings-music-label-on-of" text="ON" style="color: rgb(255, 255, 255); -unity-font-style: bold; font-size: 30px; letter-spacing: 1px; flex-shrink: 1; width: 60px; top: 0; right: -62px;" />
+                        </ui:Button>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="settings-music-volume-control" style="margin-top: 6px; height: 56px; flex-direction: row; align-items: center;">
+                        <ui:Button name="settings-music-volume-minus-button" style="width: 56px; height: 56px; min-width: 56px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-image: resource(&apos;UI/Settings Panel/btn1&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;" />
+                        <ui:VisualElement name="settings-music-volume-track" style="position: relative; flex-grow: 1; min-width: 40px; height: 28px; margin-left: 14px; margin-right: 14px; background-image: resource(&apos;UI/Settings Panel/bgload&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;">
+                            <ui:VisualElement name="settings-music-volume-fill" style="position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background-image: resource(&apos;UI/Settings Panel/load&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;" />
+                        </ui:VisualElement>
+                        <ui:Button name="settings-music-volume-plus-button" style="width: 56px; height: 56px; min-width: 56px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-image: resource(&apos;UI/Settings Panel/btn2&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="settings-sound-group" style="justify-content: flex-start;">
+                    <ui:VisualElement name="settings-sound-row" style="min-height: 70px; flex-direction: row; align-items: center; justify-content: space-between;">
+                        <ui:Label name="settings-sound-label" text="Sounds" enable-rich-text="false" style="color: rgb(104, 52, 22); -unity-font-style: bold; font-size: 42px; letter-spacing: 1px; flex-shrink: 1;" />
+                        <ui:Button name="settings-sound-toggle-button" style="width: 150px; height: 60px; min-width: 150px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-image: resource(&apos;UI/Settings Panel/on_1&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;">
+                            <ui:Label name="settings-sound-label-on-of" text="ON" style="color: rgb(255, 255, 255); -unity-font-style: bold; font-size: 30px; letter-spacing: 1px; flex-shrink: 1; width: 60px; top: 0; right: -62px;" />
+                        </ui:Button>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="settings-sound-volume-control" style="margin-top: 6px; height: 56px; flex-direction: row; align-items: center;">
+                        <ui:Button name="settings-sound-volume-minus-button" style="width: 56px; height: 56px; min-width: 56px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-image: resource(&apos;UI/Settings Panel/btn1&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;" />
+                        <ui:VisualElement name="settings-sound-volume-track" style="position: relative; flex-grow: 1; min-width: 40px; height: 28px; margin-left: 14px; margin-right: 14px; background-image: resource(&apos;UI/Settings Panel/bgload&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;">
+                            <ui:VisualElement name="settings-sound-volume-fill" style="position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background-image: resource(&apos;UI/Settings Panel/load&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;" />
+                        </ui:VisualElement>
+                        <ui:Button name="settings-sound-volume-plus-button" style="width: 56px; height: 56px; min-width: 56px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-image: resource(&apos;UI/Settings Panel/btn2&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

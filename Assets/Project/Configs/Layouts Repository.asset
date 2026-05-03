@@ -15,3 +15,5 @@ MonoBehaviour:
   _layoutViews:
   - {fileID: 7578464718582639605, guid: 83812c7a0c69a5c44bae2133cdbd6d37, type: 3}
   - {fileID: 8145869239174715578, guid: 15586eb3a08a2da4cb69eab2a5f08d42, type: 3}
+  - {fileID: 6123456789012345678, guid: 4b3ccc550d6a44dc885391f43b1e746f, type: 3}
+  - {fileID: 6400100100100100101, guid: 94a4b4c7de7d4f57b728d4554f0d1ae4, type: 3}

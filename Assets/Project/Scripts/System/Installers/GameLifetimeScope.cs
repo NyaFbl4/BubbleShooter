@@ -7,6 +7,7 @@ using MessagePipe;
 using Project.Scripts.GameManager;
 using Project.Scripts.System.UseCases;
 using Project.Scripts.Systems.UI;
+using Project.Scripts.UI.EndGame;
 using Project.Scripts.UI.LevelMapUI;
 using Project.Scripts.UI.LevelUIView;
 using Project.Scripts.UI.PauseUI;
@@ -88,6 +89,7 @@ namespace Installers
             builder.RegisterEntryPoint<LevelMapUIPresenter>(Lifetime.Singleton).As<ILevelMapUIPresenter>();
             builder.RegisterEntryPoint<SettingsUIPresenter>(Lifetime.Singleton).As<ISettingsUIPresenter>();
             builder.RegisterEntryPoint<PauseUIPresenter>(Lifetime.Singleton).As<IPauseUIPresenter>();
+            builder.RegisterEntryPoint<EndGamePresenter>(Lifetime.Singleton).As<IEndGamePresenter>();
         }
 
         private void RegisterConfigs(IContainerBuilder builder)

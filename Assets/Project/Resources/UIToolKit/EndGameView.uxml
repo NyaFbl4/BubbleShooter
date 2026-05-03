@@ -1,0 +1,18 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="end-game-overlay" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.55); align-items: center; justify-content: center; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
+        <ui:VisualElement name="end-game-panel" style="width: 780px; max-width: 92%; max-height: 94%; min-height: 640px; align-items: center; justify-content: flex-start; background-image: resource(&apos;UI/Backgound&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill; padding-left: 24px; padding-right: 24px; padding-top: 34px; padding-bottom: 30px;">
+            <ui:VisualElement style="background-image: resource(&apos;UI/banner_no_bg&apos;); width: 620px; max-width: 80%; height: 188px; align-items: center; justify-content: center; margin-bottom: 8px; top: -102px;">
+                <ui:Label name="end-game-title-label" text="VICTORY" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; unity-text-align: middle-center; -unity-font-style: bold; font-size: 82px; color: rgb(255, 242, 230); -unity-text-outline-width: 4px; -unity-text-outline-color: rgb(158, 54, 78);" />
+            </ui:VisualElement>
+            <ui:VisualElement name="end-game-stars-container" style="width: 100%; max-width: 700px; height: 220px; background-image: resource(&apos;UI/EndGamePanel/star_4&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: scale-to-fit; margin-bottom: 8px; top: -131px;" />
+            <ui:VisualElement style="background-image: resource(&apos;UI/EndGamePanel/table&apos;); width: 420px; max-width: 70%; height: 136px; align-items: center; justify-content: center; margin-bottom: 12px; top: -125px;">
+                <ui:Label name="end-game-score-label" style="unity-text-align: middle-center; -unity-font-style: bold; font-size: 58px; color: rgb(104, 52, 22); -unity-text-align: upper-center;" />
+            </ui:VisualElement>
+            <ui:Label name="end-game-completion-label" style="display: none;" />
+            <ui:VisualElement name="end-game-actions-row" style="width: 100%; max-width: 500px; flex-grow: 1; min-height: 0; flex-direction: row; align-items: center; justify-content: center; top: -114px;">
+                <ui:Button name="end-game-primary-button" style="width: 160px; height: 160px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-image: resource(&apos;UI/Buttons/restart&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;" />
+                <ui:Button name="end-game-secondary-button" style="margin-left: 40px; width: 160px; height: 160px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-image: resource(&apos;UI/Buttons/menu&apos;); background-color: rgba(0, 0, 0, 0); -unity-background-scale-mode: stretch-to-fill;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

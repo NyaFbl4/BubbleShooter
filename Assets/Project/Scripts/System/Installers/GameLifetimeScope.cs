@@ -7,6 +7,7 @@ using MessagePipe;
 using Project.Scripts.GameManager;
 using Project.Scripts.System.UseCases;
 using Project.Scripts.Systems.UI;
+using Project.Scripts.UI.LevelMapUI;
 using Project.Scripts.UI.LevelUIView;
 using UnityEngine;
 using VContainer;
@@ -78,6 +79,7 @@ namespace Installers
         private void RegisterPresenters(IContainerBuilder builder)
         {
             builder.RegisterEntryPoint<LevelUIPresenter>(Lifetime.Singleton).As<ILevelUIPresenter>();
+            builder.RegisterEntryPoint<LevelMapUIPresenter>(Lifetime.Singleton).As<ILevelMapUIPresenter>();
         }
 
         private void RegisterConfigs(IContainerBuilder builder)

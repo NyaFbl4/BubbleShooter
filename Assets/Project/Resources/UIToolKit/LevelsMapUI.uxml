@@ -1,15 +1,15 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="LevelButton" src="project://database/Assets/Project/Prefabs/UI/LevelButton.uxml?fileID=9197481963319205126&amp;guid=43fd5ac71107c7141a6b9a1e7073f5dc&amp;type=3#LevelButton" />
-    <ui:ScrollView focusable="false" enabled="true" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" style="width: 100%; height: 100%;">
-        <ui:VisualElement name="LevelsMap" enabled="true" style="flex-grow: 1; width: 100%; height: 100%; overflow: visible;">
-            <ui:VisualElement name="Map2" style="flex-grow: 1; background-image: resource(&apos;LevelsMap/02/map02&apos;); width: 1080px; height: 1920px; display: flex;">
+    <ui:ScrollView name="LevelsMapScroll" focusable="false" enabled="true" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" style="width: 100%; height: 100%;">
+        <ui:VisualElement name="LevelsMap" enabled="true" style="width: 1080px; flex-direction: column; overflow: visible;">
+            <ui:VisualElement name="Map2" style="background-image: resource(&apos;LevelsMap/02/map02&apos;); width: 1080px; height: 1920px; flex-shrink: 0;">
                 <ui:Instance template="LevelButton" name="level_13" style="position: absolute; top: 1596px; left: 547px;" />
                 <ui:Instance template="LevelButton" name="level_14" style="position: absolute; top: 1696px; left: 644px;" />
                 <ui:Instance template="LevelButton" name="level_15" style="position: absolute; top: 1274px; left: 461px;" />
                 <ui:Instance template="LevelButton" name="level_16" style="position: absolute; top: 976px; left: 487px;" />
                 <ui:Instance template="LevelButton" name="level_17" style="position: absolute; top: 856px; left: 441px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="Map1" style="flex-grow: 1; background-image: resource(&apos;LevelsMap/01/map01&apos;); width: 1080px; height: 1920px;">
+            <ui:VisualElement name="Map1" style="background-image: resource(&apos;LevelsMap/01/map01&apos;); width: 1080px; height: 1920px; flex-shrink: 0;">
                 <ui:Instance template="LevelButton" name="level_1" style="position: absolute; top: 1699px; left: 631px;" />
                 <ui:Instance template="LevelButton" name="level_2" style="position: absolute; top: 1585px; left: 541px;" />
                 <ui:Instance template="LevelButton" name="level_3" style="position: absolute; top: 1331px; left: 490px;" />

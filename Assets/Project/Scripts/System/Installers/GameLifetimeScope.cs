@@ -20,11 +20,13 @@ namespace Installers
         [SerializeField] private BubbleGunController  _bubbleGun;
         [SerializeField] private BubbleGameLogic _gameLogic;
         [SerializeField] private BubbleFieldGrid _grid;
+        [SerializeField] private BubbleSpawner _bubbleSpawner;
         [SerializeField] private GameManagerHelper _gameManagerHelper;
 
         [Header("Configs")] 
         [SerializeField] private GunConfig _gunConfig;
         [SerializeField] private BubbleLevelData _levelData;
+        [SerializeField] private BubbleLevelData[] _mapLevels;
         [SerializeField] private BubbleCatalog _bubbleCatalog;
         [SerializeField] private LayoutsRepository _layoutsRepository;
         
@@ -42,6 +44,7 @@ namespace Installers
         {
             builder.RegisterEntryPoint<HidePopUpUseCase>(Lifetime.Singleton);
             builder.RegisterEntryPoint<ShowPopUpUseCase>(Lifetime.Singleton);
+            builder.RegisterEntryPoint<SelectLevelUseCase>(Lifetime.Singleton);
             builder.Register<AddScoreUseCase>(Lifetime.Singleton);
         }
 
@@ -71,6 +74,7 @@ namespace Installers
             builder.Register<BubbleShotsService>(Lifetime.Singleton);
             builder.Register<BubbleScoreService>(Lifetime.Singleton);
             builder.Register<LoadLevelService>(Lifetime.Singleton);
+            builder.Register<BubbleLevelSelectionService>(Lifetime.Singleton);
             builder.Register<IBubbleResolveService, BubbleResolveService>(Lifetime.Singleton);
             builder.Register<IBubbleFieldScrollService, BubbleFieldScrollService>(Lifetime.Singleton);
             builder.Register<IBubbleShootPoolService, BubbleShootPoolService>(Lifetime.Singleton);
@@ -84,9 +88,22 @@ namespace Installers
 
         private void RegisterConfigs(IContainerBuilder builder)
         {
-            builder.RegisterInstance(_gunConfig);
-            builder.RegisterInstance(_levelData);
-            builder.RegisterInstance(_bubbleCatalog);
+            if (_gunConfig != null)
+                builder.RegisterInstance(_gunConfig);
+            else
+                Debug.LogError("GameLifetimeScope: GunConfig is not assigned.");
+
+            if (_levelData != null)
+                builder.RegisterInstance(_levelData);
+            else
+                Debug.LogError("GameLifetimeScope: BubbleLevelData (_levelData) is not assigned.");
+
+            builder.RegisterInstance(_mapLevels ?? System.Array.Empty<BubbleLevelData>());
+
+            if (_bubbleCatalog != null)
+                builder.RegisterInstance(_bubbleCatalog);
+            else
+                Debug.LogError("GameLifetimeScope: BubbleCatalog is not assigned.");
         }
         
         private void RegisterComponentOnScene(IContainerBuilder builder)
@@ -94,6 +111,14 @@ namespace Installers
             builder.RegisterComponent(_gameManagerHelper).AsSelf();
             builder.RegisterComponent(_bubbleGun).AsSelf();
             builder.RegisterComponent(_gameLogic).AsSelf();
+            if (_bubbleSpawner == null)
+                _bubbleSpawner = FindFirstObjectByType<BubbleSpawner>();
+
+            if (_bubbleSpawner != null)
+                builder.RegisterComponent(_bubbleSpawner).AsSelf();
+            else
+                Debug.LogWarning("GameLifetimeScope: BubbleSpawner is not assigned and was not found in scene.");
+
             builder.RegisterComponent(_grid).AsSelf();
         }
     }

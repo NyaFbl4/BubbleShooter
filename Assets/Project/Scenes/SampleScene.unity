@@ -1505,9 +1505,28 @@ MonoBehaviour:
   _bubbleGun: {fileID: 1162155169}
   _gameLogic: {fileID: 1512586476}
   _grid: {fileID: 1459027069}
+  _bubbleSpawner: {fileID: 0}
   _gameManagerHelper: {fileID: 504498317}
   _gunConfig: {fileID: 11400000, guid: e525a83ed4d0c624ca1433db97ee3918, type: 2}
-  _levelData: {fileID: 11400000, guid: 3d209845eadd66b48b46bcd1f2a5b9c9, type: 2}
+  _levelData: {fileID: 11400000, guid: 7bf13e35be2567349a1e7a42c5fd955e, type: 2}
+  _mapLevels:
+  - {fileID: 11400000, guid: 7bf13e35be2567349a1e7a42c5fd955e, type: 2}
+  - {fileID: 11400000, guid: 420b8f373747c634bb16727a01f4718c, type: 2}
+  - {fileID: 11400000, guid: db0976784f583124eb4ef35393dd74f8, type: 2}
+  - {fileID: 11400000, guid: 037c7f42f8e711145979d2855084dccd, type: 2}
+  - {fileID: 11400000, guid: 58514c498346cbb4693372e3720e294c, type: 2}
+  - {fileID: 11400000, guid: 3216c7f8579c58a4e85ba5ef8f11e668, type: 2}
+  - {fileID: 11400000, guid: 5b7a45f0f116fd14d98da2bbcfd67fc9, type: 2}
+  - {fileID: 11400000, guid: 8f6da018c82535a439e86ae733a1ea42, type: 2}
+  - {fileID: 11400000, guid: a78983d61dfb6b648ad3b47e3f810cd5, type: 2}
+  - {fileID: 11400000, guid: ccee4504c3555bc45bb08e0748369f51, type: 2}
+  - {fileID: 11400000, guid: fc22a27745773904381ecd4d6793dff5, type: 2}
+  - {fileID: 11400000, guid: 98e25ee03cb3d82498fefbe13aec4c83, type: 2}
+  - {fileID: 11400000, guid: c5635a5234abd9040b36dbe8c583d2cd, type: 2}
+  - {fileID: 11400000, guid: 38d6480c4b87ceb41a99dd1af53e6cae, type: 2}
+  - {fileID: 11400000, guid: b69a822f1fb1a3d48b52a9e7e6745116, type: 2}
+  - {fileID: 11400000, guid: cbb16f1680a0b1d498fb9052d89b0b1d, type: 2}
+  - {fileID: 11400000, guid: 065727a60779ecb4b9c1957072e76871, type: 2}
   _bubbleCatalog: {fileID: 11400000, guid: 69682b81844a4087aad0e5672b053265, type: 2}
   _layoutsRepository: {fileID: 11400000, guid: 54702634a55739943b717e58c868646d, type: 2}
 --- !u!1 &1733848462

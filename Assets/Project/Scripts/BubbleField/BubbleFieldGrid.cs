@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Bubbles;
 using Project.Scripts.GameManager;
 using Sirenix.OdinInspector;
+using VContainer;
 
 namespace BubbleField
 {
@@ -58,7 +59,20 @@ namespace BubbleField
         private TopBound _topLineInstance;
 
         private const int MinMatchCount = 3;
-        
+
+        private void Awake()
+        {
+            // Fallback for scene setups where spawner is not wired in inspector.
+            if (_spawner == null)
+                _spawner = FindFirstObjectByType<BubbleSpawner>();
+        }
+
+        [Inject]
+        public void Construct(BubbleLevelData levelData)
+        {
+            if (levelData != null)
+                _levelData = levelData;
+        }
 
         [Button]
         public void BuildFromLevelData()

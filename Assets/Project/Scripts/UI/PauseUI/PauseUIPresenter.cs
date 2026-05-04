@@ -3,6 +3,7 @@ using Project.Scripts.GameManager;
 using Project.Scripts.Systems.UI;
 using Project.Scripts.Systems.UI.Dtos;
 using Project.Scripts.UI.LevelMapUI;
+using Project.Scripts.UI.LevelUIView;
 using Project.Scripts.UI.SettingsUI;
 using VContainer;
 
@@ -62,6 +63,16 @@ namespace Project.Scripts.UI.PauseUI
         {
             _gameManagerService?.FinishGame();
             HidePausePopup();
+
+            _hidePopupPublisher?.Publish(new HidePopupDto
+            {
+                TargetPopUpType = typeof(ILevelUIPresenter)
+            });
+
+            _showPopupPublisher?.Publish(new ShowPopupDto
+            {
+                TargetPopUpType = typeof(ILevelMapUIPresenter)
+            });
         }
 
         private void HidePausePopup()
@@ -70,11 +81,6 @@ namespace Project.Scripts.UI.PauseUI
             {
                 TargetPopUpType = typeof(IPauseUIPresenter)
             });
-            
-            _showPopupPublisher?.Publish((new ShowPopupDto
-            {
-                TargetPopUpType = typeof(ILevelMapUIPresenter)
-            }));
         }
     }
 }

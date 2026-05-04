@@ -8,6 +8,7 @@ namespace Project.Scripts.UI.LevelUIView
     public class LevelUIView : LayoutViewBase, ILevelUIView
     {
         private Button _changeBubbleBtn;
+        private Button _pauseBtn;
         //private VisualElement _currentBubbleImg;
         private VisualElement _nextBubbleImg;
         private VisualElement _progressFill;
@@ -15,12 +16,14 @@ namespace Project.Scripts.UI.LevelUIView
         private Label _currentBubbleLbl;
 
         public event Action ChangeBubbleBtnClicked;
+        public event Action PauseBtnClicked;
 
         public override void Awake()
         {
             base.Awake();
 
             _changeBubbleBtn = _root.Q<Button>("ChangeBubbleButton");
+            _pauseBtn = _root.Q<Button>("pause_btn");
             var currentBubbleContainer = _root.Q<VisualElement>("CurrentBubbleContainer");
             //_currentBubbleImg = currentBubbleContainer?.Q<VisualElement>("BubbleImg");
             _nextBubbleImg = _root.Q<VisualElement>("ChangeBubbleImg");
@@ -30,6 +33,8 @@ namespace Project.Scripts.UI.LevelUIView
 
             if (_changeBubbleBtn != null)
                 _changeBubbleBtn.clicked += OnChangeBubbleBtnClicked;
+            if (_pauseBtn != null)
+                _pauseBtn.clicked += OnPauseBtnClicked;
 
             SetProgress(0);
             base.Show();
@@ -39,6 +44,8 @@ namespace Project.Scripts.UI.LevelUIView
         {
             if (_changeBubbleBtn != null)
                 _changeBubbleBtn.clicked -= OnChangeBubbleBtnClicked;
+            if (_pauseBtn != null)
+                _pauseBtn.clicked -= OnPauseBtnClicked;
         }
 
         public void SetProgress(int progress)
@@ -93,6 +100,11 @@ namespace Project.Scripts.UI.LevelUIView
         private void OnChangeBubbleBtnClicked()
         {
             ChangeBubbleBtnClicked?.Invoke();
+        }
+
+        private void OnPauseBtnClicked()
+        {
+            PauseBtnClicked?.Invoke();
         }
     }
 }

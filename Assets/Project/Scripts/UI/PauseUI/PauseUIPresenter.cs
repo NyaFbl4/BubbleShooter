@@ -2,6 +2,7 @@
 using Project.Scripts.GameManager;
 using Project.Scripts.Systems.UI;
 using Project.Scripts.Systems.UI.Dtos;
+using Project.Scripts.UI.LevelMapUI;
 using Project.Scripts.UI.SettingsUI;
 using VContainer;
 
@@ -35,7 +36,7 @@ namespace Project.Scripts.UI.PauseUI
 
         public void OnStartGame()
         {
-            HidePausePopup();
+            //HidePausePopup();
         }
 
         public void OnFinishGame()
@@ -69,6 +70,11 @@ namespace Project.Scripts.UI.PauseUI
             {
                 TargetPopUpType = typeof(IPauseUIPresenter)
             });
+            
+            _showPopupPublisher?.Publish((new ShowPopupDto
+            {
+                TargetPopUpType = typeof(ILevelMapUIPresenter)
+            }));
         }
     }
 }

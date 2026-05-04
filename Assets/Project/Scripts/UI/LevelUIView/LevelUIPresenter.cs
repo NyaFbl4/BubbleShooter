@@ -5,6 +5,7 @@ using MessagePipe;
 using Project.Scripts.GameManager;
 using Project.Scripts.Systems.UI;
 using Project.Scripts.Systems.UI.Dtos;
+using Project.Scripts.UI.PauseUI;
 using UnityEngine;
 using VContainer;
 
@@ -16,6 +17,7 @@ namespace Project.Scripts.UI.LevelUIView
         [Inject] private readonly BubbleCatalog _catalog;
         [Inject] private readonly BubbleShotsService _shots;
         [Inject] private readonly GunConfig _gunConfig;
+        [Inject] private readonly IGameManagerService _gameManagerService;
         [Inject] private readonly IPublisher<SwapBubbleCommandDto> _swapPublisher;
         [Inject] private readonly IPublisher<ShowPopupDto> _showPopUpPublisher;
         [Inject] private readonly IPublisher<HidePopupDto> _hidePopUpPublisher;
@@ -41,6 +43,7 @@ namespace Project.Scripts.UI.LevelUIView
             IGameListener.Register(this);
 
             _layoutView.ChangeBubbleBtnClicked += OnChangeBubbleClicked;
+            _layoutView.PauseBtnClicked += OnPauseClicked;
             if (_queue != null)
                 _queue.QueueChanged += RefreshQueueView;
             if (_shots != null)
@@ -55,6 +58,7 @@ namespace Project.Scripts.UI.LevelUIView
         public override void Dispose()
         {
             _layoutView.ChangeBubbleBtnClicked -= OnChangeBubbleClicked;
+            _layoutView.PauseBtnClicked -= OnPauseClicked;
             if (_queue != null)
                 _queue.QueueChanged -= RefreshQueueView;
             if (_shots != null)
@@ -108,6 +112,15 @@ namespace Project.Scripts.UI.LevelUIView
                 return;
 
             _swapPublisher?.Publish(new SwapBubbleCommandDto());
+        }
+
+        private void OnPauseClicked()
+        {
+            _gameManagerService?.PauseGame();
+            _showPopUpPublisher?.Publish(new ShowPopupDto
+            {
+                TargetPopUpType = typeof(IPauseUIPresenter)
+            });
         }
 
         private void OnShotsChanged(int shotsLeft)

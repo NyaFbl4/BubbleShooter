@@ -91,7 +91,9 @@ namespace Project.Scripts.UI.EndGame
 
             var isWin = dto.Command == EGameStatusCommand.ShowWinAndFinish;
             var score = _scoreService?.Score ?? 0;
-            ShowResult(isWin, score, isWin ? 3 : 0, 3, string.Empty);
+            var stars = isWin ? 3 : 0;
+
+            ShowResult(isWin, score, stars, 3, string.Empty);
         }
     }
 }

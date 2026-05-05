@@ -48,6 +48,7 @@ namespace Installers
             builder.RegisterEntryPoint<HidePopUpUseCase>(Lifetime.Singleton);
             builder.RegisterEntryPoint<ShowPopUpUseCase>(Lifetime.Singleton);
             builder.RegisterEntryPoint<SelectLevelUseCase>(Lifetime.Singleton);
+            builder.RegisterEntryPoint<SaveLevelStarsProgressUseCase>(Lifetime.Singleton);
             builder.Register<AddScoreUseCase>(Lifetime.Singleton);
         }
 

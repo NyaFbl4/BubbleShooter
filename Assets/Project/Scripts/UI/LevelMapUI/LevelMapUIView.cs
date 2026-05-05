@@ -9,11 +9,15 @@ namespace Project.Scripts.UI.LevelMapUI
 {
     public class LevelMapUIView : LayoutViewBase
     {
+        private const string LevelStarsKeyPrefix = "level_stars_";
+        private const string LevelButtonSpritePathPrefix = "LevelsMap/Parts/buttons/level_btn_";
+
         private ScrollView _scroll;
         private VisualElement _bottomAnchor;
         private bool _needInitBottom;
 
         private readonly Dictionary<int, Button> _levelButtons = new();
+        private readonly Dictionary<int, Sprite> _buttonSprites = new();
         public event Action<int> LevelClicked;
 
         public override void Awake()
@@ -25,11 +29,13 @@ namespace Project.Scripts.UI.LevelMapUI
             _scroll?.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
 
             RegisterLevelButtons();
+            ApplyLevelButtonsProgressVisual();
         }
 
         public override async UniTask ShowAsync()
         {
             _needInitBottom = true;
+            ApplyLevelButtonsProgressVisual();
             await base.ShowAsync();
         }
         
@@ -59,11 +65,44 @@ namespace Project.Scripts.UI.LevelMapUI
                         return;
 
                     _levelButtons[levelId] = button;
+                    button.text = levelId.ToString();
                     button.clicked += () => LevelClicked?.Invoke(levelId);
                     registeredCount++;
                 });
 
             Debug.Log($"LevelMapUIView: registered level buttons = {registeredCount}");
+        }
+
+        private void ApplyLevelButtonsProgressVisual()
+        {
+            foreach (var pair in _levelButtons)
+            {
+                var levelNumber = pair.Key;
+                var button = pair.Value;
+                if (button == null)
+                    continue;
+
+                var stars = Mathf.Clamp(PlayerPrefs.GetInt(LevelStarsKeyPrefix + levelNumber, 0), 0, 3);
+                if (stars <= 0)
+                    continue;
+
+                var sprite = GetButtonSprite(stars);
+                if (sprite == null)
+                    continue;
+
+                button.style.backgroundImage = new StyleBackground(sprite);
+            }
+        }
+
+        private Sprite GetButtonSprite(int stars)
+        {
+            var safeStars = Mathf.Clamp(stars, 1, 3);
+            if (_buttonSprites.TryGetValue(safeStars, out var cached) && cached != null)
+                return cached;
+
+            var sprite = Resources.Load<Sprite>(LevelButtonSpritePathPrefix + safeStars);
+            _buttonSprites[safeStars] = sprite;
+            return sprite;
         }
 
         private void OnGeometryChanged(GeometryChangedEvent _)

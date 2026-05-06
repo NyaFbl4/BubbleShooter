@@ -12,6 +12,7 @@ namespace Project.Scripts.System.UseCases
     public class SaveLevelStarsProgressUseCase : IInitializable, IDisposable
     {
         private const string LevelStarsKeyPrefix = "level_stars_";
+        private const string LevelPassedKeyPrefix = "level_passed_";
 
         [Inject] private readonly ISubscriber<GameStatusCommandDto> _gameStatusSubscriber;
         [Inject] private readonly BubbleScoreService _scoreService;
@@ -45,6 +46,7 @@ namespace Project.Scripts.System.UseCases
             var score = _scoreService?.Score ?? 0;
             var stars = CalculateStarsForScore(score);
             SaveBestStars(levelNumber, stars);
+            SavePassedLevel(levelNumber);
         }
 
         private int CalculateStarsForScore(int score)
@@ -71,6 +73,16 @@ namespace Project.Scripts.System.UseCases
                 return;
 
             PlayerPrefs.SetInt(key, safeStars);
+            PlayerPrefs.Save();
+        }
+
+        private static void SavePassedLevel(int levelNumber)
+        {
+            var key = LevelPassedKeyPrefix + levelNumber;
+            if (PlayerPrefs.GetInt(key, 0) == 1)
+                return;
+
+            PlayerPrefs.SetInt(key, 1);
             PlayerPrefs.Save();
         }
     }

@@ -5,6 +5,8 @@ namespace BubbleField
 {
     public class BubbleLevelSelectionService
     {
+        private const string LevelPassedKeyPrefix = "level_passed_";
+
         private readonly BubbleLevelData _runtimeLevelData;
         private readonly BubbleLevelData[] _mapLevels;
 
@@ -32,6 +34,12 @@ namespace BubbleField
                 return false;
             }
 
+            if (!IsLevelUnlocked(levelNumber))
+            {
+                Debug.LogWarning($"BubbleLevelSelectionService: Level {levelNumber} is locked. Complete previous levels first.");
+                return false;
+            }
+
             var source = _mapLevels[levelNumber - 1];
             if (source == null)
             {
@@ -42,6 +50,20 @@ namespace BubbleField
             ApplySourceToRuntime(source);
             CurrentLevelNumber = levelNumber;
             CurrentLevelName = source.name;
+            return true;
+        }
+
+        public bool IsLevelUnlocked(int levelNumber)
+        {
+            if (levelNumber <= 1)
+                return true;
+
+            for (var i = 1; i < levelNumber; i++)
+            {
+                if (PlayerPrefs.GetInt(LevelPassedKeyPrefix + i, 0) < 1)
+                    return false;
+            }
+
             return true;
         }
 
